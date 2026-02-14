@@ -1,3 +1,4 @@
+import NavigationBar from '@/layout/Header'
 import Sidebar from '@/layout/Sidebar'
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
@@ -7,11 +8,14 @@ const DashboardLayout = ({ children }) => {
         <div>
             <Container fluid style={{ height: "100vh" }}>
                 <Row style={{ height: "100%" }}>
-                    <Col xs={2} className='px-0' style={{ height: "100%" }}>
+                    <Col lg={2} className='px-0 d-none d-md-block' style={{ height: "100%" }}>
                         <Sidebar />
                     </Col>
-                    <Col xs={10} style={{ height: "100%", overflow: "auto" }}>
-                        {children}
+                    <Col xs={12} lg={10} className='px-0' style={{ height: "100%", overflow: "auto" }}>
+                        <NavigationBar />
+                        <div className='px-2 mt-5 pt-4'>
+                            {children}
+                        </div>
                     </Col>
                 </Row>
             </Container>
