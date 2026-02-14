@@ -1,9 +1,10 @@
+import UserTable from '@/components/dashboard/Users'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-       Users
+       <UserTable/>
     </div>
   )
 }
