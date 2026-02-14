@@ -22,7 +22,7 @@ const NavigationBar = () => {
             >
                 <Container fluid >
                     <div className='py-2 d-flex gap-3 align-items-center'>
-                        <HiMiniBars3CenterLeft size={26} style={{ cursor: "pointer" }} onClick={() => setShow(true)} />
+                        <HiMiniBars3CenterLeft size={26} className='d-block d-md-none' style={{ cursor: "pointer" }} onClick={() => setShow(true)} />
                         <h3 className='mb-0'>Heading</h3>
                     </div>
 
