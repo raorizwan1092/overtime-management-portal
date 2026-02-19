@@ -14,8 +14,8 @@ const TextInput = ({
     const theme = useTheme()
 
     return (
-        <Form.Group className="mb-3" >
-            <Form.Label >
+        <Form.Group className="mb-3 text-start" >
+            <Form.Label style={{color:theme?.textColor}}>
                 {label}
             </Form.Label>
 
