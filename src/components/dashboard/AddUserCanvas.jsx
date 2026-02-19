@@ -8,8 +8,9 @@ import { ROLE_OPTIONS } from "@/constants/AppConstants";
 import TextInput from "../shared/TextInput/TextInput";
 import SelectInput from "../shared/SelectInput/SelectInput";
 import CustomButton from "../shared/Button/Button";
+import { createUser, GetAllUsers } from "@/services/Users";
 
-const AddUserCanvas = ({ showCanvas, setShowCanvas }) => {
+const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
     const initialValues = {
         name: "",
         email: "",
@@ -24,10 +25,23 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas }) => {
         role: Yup.string().required("Role is required"),
     });
 
-    const handleSubmit = (values) => {
-        console.log("Form Values:", values);
-        setShowCanvas(false);
+    const handleSubmit = async (values) => {
+        try {
+            const response = await createUser(values);
+            console.log("response", response)
+
+            if (response?.data.success) {
+                console.log("User created:", response?.data.user);
+                setShowCanvas(false);
+                fetchUsers()
+            } else {
+                console.error("Error:", data.error || data.errors);
+            }
+        } catch (err) {
+            console.error("Network error:", err);
+        }
     };
+
 
     return (
         <Canvas

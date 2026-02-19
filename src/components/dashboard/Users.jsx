@@ -56,6 +56,7 @@ const UserTable = () => {
             <AddUserCanvas
                 showCanvas={showCanvas}
                 setShowCanvas={setShowCanvas}
+                fetchUsers={fetchUsers}
             />
 
             {loading ?
