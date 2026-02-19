@@ -24,6 +24,7 @@ const DashboardSidebar = ({ handleClose }) => {
                 color: theme.textColor,
                 height: "100%",
                 width: "100%",
+                borderRight: theme.border
             }}
         >
             <Nav className="d-flex py-3 px-2 w-100 flex-column">

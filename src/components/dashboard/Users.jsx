@@ -1,10 +1,12 @@
 "use client";
 import { GetAllUsers } from "@/services/Users";
 import React, { useEffect, useState } from "react";
-import { Table, Pagination, Spinner, Container } from "react-bootstrap";
+import { Table, Pagination, Spinner, Container, Button } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { FiEye } from "react-icons/fi";
 import TableCard from "../shared/TableCard";
+import AddUserCanvas from "./AddUserCanvas";
+import CustomButton from "../shared/Button/Button";
 
 const UserTable = () => {
     const [users, setUsers] = useState([]);
@@ -42,6 +44,19 @@ const UserTable = () => {
 
     return (
         <div>
+            <div className="text-end">
+                <CustomButton
+                    label="Add User"
+                    onClick={() => {
+                        setSelectedUser(null);
+                        setShowCanvas(true);
+                    }}
+                />
+            </div>
+            <AddUserCanvas
+                showCanvas={showCanvas}
+                setShowCanvas={setShowCanvas}
+            />
 
             {loading ?
                 <div className="d-flex justify-content-center align-items-center mt-5" >

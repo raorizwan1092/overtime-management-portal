@@ -16,7 +16,8 @@ const NavigationBar = () => {
                     color: theme.textColor,
                     position: "fixed",
                     top: 0,
-                    zIndex: 1000
+                    zIndex: 1000,
+                    borderBottom:theme.border
                 }}
                 className='w-100'
             >

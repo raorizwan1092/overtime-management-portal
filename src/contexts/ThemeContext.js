@@ -13,7 +13,8 @@ const theme = {
     btnBackground: "#fff",
     btnText: "#000000",
     radius: "8px",
-    cardBackground: "#1c1b1b"
+    cardBackground: "#1c1b1b",
+    btnBackground:'#ffffff'
 };
 
 const ThemeContext = createContext(theme);
