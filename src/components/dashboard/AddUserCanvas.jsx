@@ -8,7 +8,8 @@ import { ROLE_OPTIONS } from "@/constants/AppConstants";
 import TextInput from "../shared/TextInput/TextInput";
 import SelectInput from "../shared/SelectInput/SelectInput";
 import CustomButton from "../shared/Button/Button";
-import { createUser, GetAllUsers } from "@/services/Users";
+import { createUser } from "@/services/Users";
+import toast from "react-hot-toast";
 
 const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
     const initialValues = {
@@ -31,7 +32,7 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
             console.log("response", response)
 
             if (response?.data.success) {
-                console.log("User created:", response?.data.user);
+                toast.success("User Created Successfully")
                 setShowCanvas(false);
                 fetchUsers()
             } else {
