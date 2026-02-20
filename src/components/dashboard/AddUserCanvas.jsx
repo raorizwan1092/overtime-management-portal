@@ -35,11 +35,9 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
                 toast.success("User Created Successfully")
                 setShowCanvas(false);
                 fetchUsers()
-            } else {
-                console.error("Error:", data.error || data.errors);
             }
         } catch (err) {
-            console.error("Network error:", err);
+            toast.error("Network error:", err);
         }
     };
 

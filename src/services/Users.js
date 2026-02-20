@@ -6,3 +6,9 @@ export const GetAllUsers = function (page) {
 export const createUser = function (data) {
     return GetApiData(`/users`, 'POST', data, true);
 }
+export const SignInUser = function (data) {
+    return GetApiData(`/signin`, 'POST', data, true);
+}
+export const Logout = function (data) {
+    return GetApiData(`/logout`, 'POST', data, true);
+}

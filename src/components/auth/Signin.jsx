@@ -8,9 +8,13 @@ import CustomButton from "../shared/Button/Button";
 import AuthenticationHeader from "./AuthenticationHeader";
 import Link from "next/link";
 import { useTheme } from "@/contexts/ThemeContext";
+import { SignInUser } from "@/services/Users";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const Signin = () => {
     const theme = useTheme()
+    const router = useRouter()
     const initialValues = {
         email: "",
         password: "",
@@ -21,9 +25,25 @@ const Signin = () => {
         password: Yup.string().required("Password is required"),
     });
 
-    const handleSubmit = (values) => {
-        console.log("Signin Values:", values);
+    const handleSubmit = async (values, { setSubmitting }) => {
+        try {
+            const response = await SignInUser(values);
+
+
+            if (response?.data.success) {
+                toast.success("Login successful");
+                router.push("/users");
+            }
+
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error || "Login failed"
+            );
+        } finally {
+            setSubmitting(false);
+        }
     };
+
 
     return (
         <div>
@@ -37,7 +57,7 @@ const Signin = () => {
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ handleSubmit, handleChange, values, errors, touched }) => (
+                {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
                     <Form onSubmit={handleSubmit} className="mt-4">
                         <TextInput
                             label="Email"
@@ -60,7 +80,7 @@ const Signin = () => {
                         />
 
                         <div className="text-end mb-3">
-                            <Link href="#" className="text-decoration-none" style={{color:theme?.textColor}}>
+                            <Link href="#" className="text-decoration-none" style={{ color: theme?.textColor }}>
                                 Forgot Password?
                             </Link>
                         </div>
@@ -69,6 +89,7 @@ const Signin = () => {
                             type="submit"
                             label="Sign In"
                             fullWidth
+                            loading={isSubmitting}
                         />
                     </Form>
                 )}
