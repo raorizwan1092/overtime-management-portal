@@ -1,7 +1,8 @@
 import {
   FiUsers,
   FiClock,
-  FiSettings
+  FiSettings,
+  FiFileText
 } from "react-icons/fi";
 
 export const USER_ROLES = {
@@ -19,13 +20,20 @@ export const navLinks = [
   },
   {
     id: 2,
+    name: "Rules",
+    icon: <FiFileText size={20} />,
+    path: "/rules",
+    roles: [USER_ROLES.HR],
+  },
+  {
+    id: 3,
     name: "Log Time",
     icon: <FiClock size={20} />,
     path: "/time-log",
     roles: [USER_ROLES.EMPLOYEE, USER_ROLES.MANAGER],
   },
   {
-    id: 3,
+    id: 4,
     name: "Settings",
     icon: <FiSettings size={20} />,
     path: "/settings",

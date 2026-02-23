@@ -1,150 +1,174 @@
 "use client";
-import { GetAllUsers } from "@/services/Users";
-import React, { useEffect, useState } from "react";
-import { Table, Pagination, Spinner } from "react-bootstrap";
-import toast from "react-hot-toast";
+import React, { useEffect, useState, useCallback } from "react";
+import { Table, Pagination } from "react-bootstrap";
 import { FiEye } from "react-icons/fi";
+import toast from "react-hot-toast";
+
+import { GetAllUsers } from "@/services/Users";
+import { FaPlus } from "react-icons/fa6";
+
 import TableCard from "../shared/TableCard";
 import AddUserCanvas from "./AddUserCanvas";
+import UserDetail from "./UserDetail";
 import CustomButton from "../shared/Button/Button";
+import SharedSpinner from "../shared/Spinner";
 
 const UserTable = () => {
     const [users, setUsers] = useState([]);
     const [pagination, setPagination] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
-    const [showCanvas, setShowCanvas] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const [showAddCanvas, setShowAddCanvas] = useState(false);
+    const [showDetailCanvas, setShowDetailCanvas] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
-
-    const fetchUsers = async (pageNumber = 1) => {
+    const fetchUsers = useCallback(async (pageNumber = 1) => {
         setLoading(true);
         try {
             const response = await GetAllUsers(pageNumber);
-            console.log("res", response)
+
             if (response?.data?.success) {
-                setUsers(response?.data.users);
-                setPagination(response?.data.pagination);
+                setUsers(response.data.users || []);
+                setPagination(response.data.pagination || null);
             }
         } catch (error) {
-            toast?.error(error ? error?.response?.data?.error : "Something went wrong")
+            toast.error(
+                error?.response?.data?.error || "Something went wrong"
+            );
         } finally {
             setLoading(false);
         }
+    }, []);
+
+    const handleAddUser = () => {
+        setSelectedUser(null);
+        setShowAddCanvas(true);
     };
+
     const handleViewUser = (user) => {
         setSelectedUser(user);
-        setShowCanvas(true);
+        setShowDetailCanvas(true);
     };
 
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     useEffect(() => {
-        fetchUsers(page);
-    }, [page]);
+        fetchUsers(currentPage);
+    }, [currentPage, fetchUsers]);
 
     return (
         <div>
-            <div className="text-end">
+            <div className="d-flex justify-content-end mb-4">
                 <CustomButton
-                    label="Add User"
-                    onClick={() => {
-                        setSelectedUser(null);
-                        setShowCanvas(true);
-                    }}
+                    label={
+                        <>
+                            <FaPlus className="me-2" />
+                            Add User
+                        </>
+                    }
+                    onClick={handleAddUser}
                 />
+
             </div>
-            <AddUserCanvas
-                showCanvas={showCanvas}
-                setShowCanvas={setShowCanvas}
-                fetchUsers={fetchUsers}
-            />
 
-            {loading ?
-                <div className="d-flex justify-content-center align-items-center mt-5" >
-                    <Spinner animation="border" className="text-white mt-5" />
-                </div>
-
-                :
+            {loading ? (
+                <SharedSpinner />
+            ) : (
                 <TableCard>
-
-
-                    <div>
-                        <Table responsive className="mb-0">
-                            <thead>
+                    <Table responsive className="mb-0">
+                        <thead>
+                            <tr>
+                                <th style={{ width: "80px" }}>No.</th>
+                                <th style={{ width: "25%" }}>Name</th>
+                                <th style={{ width: "30%" }}>Email</th>
+                                <th style={{ width: "15%" }}>Phone</th>
+                                <th style={{ width: "10%" }}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.length === 0 ? (
                                 <tr>
-                                    <th style={{ width: "80px" }}>No.</th>
-                                    <th style={{ width: "25%" }}>Name</th>
-                                    <th style={{ width: "30%" }}>Email</th>
-                                    <th style={{ width: "15%" }}>Phone</th>
-                                    <th style={{ width: "15%" }}>Actions</th>
+                                    <td colSpan="5" className="text-center py-4">
+                                        No users found
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {users.length === 0 ? (
-                                    <tr className="border-0">
-                                        <td colSpan="5" className="text-center align-middle">
-                                            <div className="d-flex justify-content-center align-items-center h-100">
-                                                No users found
-                                            </div>
+                            ) : (
+                                users.map((user, index) => (
+                                    <tr key={user._id}>
+                                        <td>
+                                            {(currentPage - 1) *
+                                                (pagination?.limit || 10) +
+                                                index +
+                                                1}
+                                        </td>
+                                        <td>{user?.name || "-"}</td>
+                                        <td>{user?.email}</td>
+                                        <td>{user?.phone}</td>
+                                        <td>
+                                            <FiEye
+                                                size={18}
+                                                style={{ cursor: "pointer" }}
+                                                title="View User"
+                                                onClick={() =>
+                                                    handleViewUser(user)
+                                                }
+                                            />
                                         </td>
                                     </tr>
-                                ) : (
-                                    users?.map((user, index) => (
-                                        <tr key={user._id}>
-                                            <td className="text-truncate">{(page - 1) * pagination.limit + index + 1}</td>
-                                            <td className="text-truncate" title={user.name || "-"}>
-                                                {user.name || "-"}
-                                            </td>
-                                            <td className="text-truncate" title={user.email}>
-                                                {user.email}
-                                            </td>
-                                            <td className="text-truncate">{user.phone}</td>
-                                            <td>
-                                                <FiEye
-                                                    size={18}
-                                                    style={{ cursor: "pointer" }}
-                                                    title="View User"
-                                                    onClick={() => handleViewUser(user)}
-                                                />
-                                            </td>
-
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
+                                ))
+                            )}
+                        </tbody>
+                    </Table>
                 </TableCard>
-
-            }
+            )}
 
             {pagination && !loading && users.length > 0 && (
-                <Pagination className="justify-content-center align-items-center mt-3">
+                <Pagination className="justify-content-center mt-4">
                     <Pagination.Prev
                         disabled={!pagination.hasPrevPage}
-                        onClick={() => setPage(page - 1)}
-                        className="prev-btn"
+                        onClick={() =>
+                            handlePageChange(currentPage - 1)
+                        }
                     />
 
-                    {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-                        (pageNum) => (
-                            <Pagination.Item
-                                key={pageNum}
-                                active={pageNum === page}
-                                onClick={() => setPage(pageNum)}
-                            >
-                                {pageNum}
-                            </Pagination.Item>
-                        )
-                    )}
+                    {Array.from(
+                        { length: pagination.totalPages },
+                        (_, i) => i + 1
+                    ).map((pageNumber) => (
+                        <Pagination.Item
+                            key={pageNumber}
+                            active={pageNumber === currentPage}
+                            onClick={() =>
+                                handlePageChange(pageNumber)
+                            }
+                        >
+                            {pageNumber}
+                        </Pagination.Item>
+                    ))}
 
                     <Pagination.Next
                         disabled={!pagination.hasNextPage}
-                        onClick={() => setPage(page + 1)}
-                        className="next-btn"
+                        onClick={() =>
+                            handlePageChange(currentPage + 1)
+                        }
                     />
                 </Pagination>
             )}
+
+            <AddUserCanvas
+                showCanvas={showAddCanvas}
+                setShowCanvas={setShowAddCanvas}
+                fetchUsers={() => fetchUsers(currentPage)}
+            />
+
+            <UserDetail
+                showCanvas={showDetailCanvas}
+                setShowCanvas={setShowDetailCanvas}
+                selectedUser={selectedUser}
+            />
         </div>
     );
 };
