@@ -12,9 +12,11 @@ import { SignInUser } from "@/services/Users";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { NAVIGATION_URLS, USER_ROLES } from "@/constants/AppConstants";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Signin = () => {
     const theme = useTheme()
+    const { setUser } = useAuth();
     const router = useRouter()
     const initialValues = {
         email: "",
@@ -32,9 +34,9 @@ const Signin = () => {
 
             if (response?.data.success) {
                 const role = response?.data?.user?.role;
-
+                const userData = response?.data?.user;
+                setUser(userData);
                 toast.success("Login successful");
-                console.log("role",role)
 
                 router.push(
                     role === USER_ROLES.HR

@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const DashboardSidebar = ({ handleClose }) => {
     const theme = useTheme()
+
     const { user } = useAuth()
     console.log("user", user)
     const pathname = usePathname()
