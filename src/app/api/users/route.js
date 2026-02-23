@@ -5,9 +5,18 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { sendEmail } from "@/lib/mailer";
 import { welcomeEmailTemplate } from "@/lib/emails/WelcomeEmail";
+import { verifyToken } from "@/utils/verifyToken";
 const LIMIT = process.env.PAGE_LIMIT || 10;
 
 export async function GET(req) {
+  const decoded = verifyToken(req);
+  if (!decoded || decoded.role !== USER_ROLES.HR) {
+    return NextResponse.json(
+      { success: false, error: "Forbidden" },
+      { status: 403 }
+    );
+  }
+
   try {
     await connectDB();
 
@@ -55,6 +64,13 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
+  const decoded = verifyToken(req);
+  if (!decoded || decoded.role !== USER_ROLES.HR) {
+    return NextResponse.json(
+      { success: false, error: "Forbidden" },
+      { status: 403 }
+    );
+  }
   try {
     await connectDB();
 

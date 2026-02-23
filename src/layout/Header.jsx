@@ -9,6 +9,7 @@ import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Logout } from '@/services/Users';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { NAVIGATION_URLS } from '@/constants/AppConstants';
 
 const NavigationBar = () => {
     const theme = useTheme();
@@ -20,11 +21,11 @@ const NavigationBar = () => {
         try {
             setLoading(true);
             const response = await Logout();
-            console.log("response",response)
+            console.log("response", response)
 
             if (response?.data.success) {
                 toast.success("Logged out successfully");
-                router.push("/signin");
+                router.push(NAVIGATION_URLS.AUTH_URLS.SIGNIN);
             }
         } catch (error) {
             toast.error(error?.response?.data?.error || "Logout failed");

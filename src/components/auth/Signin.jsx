@@ -11,6 +11,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { SignInUser } from "@/services/Users";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { NAVIGATION_URLS } from "@/constants/AppConstants";
 
 const Signin = () => {
     const theme = useTheme()
@@ -32,7 +33,7 @@ const Signin = () => {
 
             if (response?.data.success) {
                 toast.success("Login successful");
-                router.push("/users");
+                router.push(NAVIGATION_URLS.USERS);
             }
 
         } catch (error) {
