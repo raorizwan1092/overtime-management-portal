@@ -40,7 +40,7 @@ const NavigationBar = () => {
                 style={{
                     backgroundColor: theme.background,
                     color: theme.textColor,
-                    position: "fixed",
+                    // position: "fixed",
                     top: 0,
                     zIndex: 1000,
                     borderBottom: theme.border
@@ -48,7 +48,7 @@ const NavigationBar = () => {
                 className='w-100'
             >
                 <Container fluid>
-                    <div className='py-2 d-flex gap-3 align-items-center justify-content-between'>
+                    <div className='py-2 d-flex gap-3 align-items-center justify-content-between w-100'>
                         <div className='d-flex gap-3 align-items-center'>
                             <HiMiniBars3CenterLeft
                                 size={26}

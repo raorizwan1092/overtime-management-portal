@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }) => {
                     </Col>
                     <Col xs={12} lg={10} className='px-0' style={{ height: "100%", overflow: "auto" }}>
                         <NavigationBar />
-                        <div className='px-4 mt-5 py-5'>
+                        <div className='px-4 py-3'>
                             {children}
                         </div>
                     </Col>
