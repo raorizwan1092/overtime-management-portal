@@ -60,7 +60,7 @@ const NavigationBar = () => {
 
                         <div>
                             <CustomButton
-                                label={<RiLogoutCircleRLine size={28} />}
+                                label={<RiLogoutCircleRLine size={28} className='text-danger' />}
                                 onClick={handleLogout}
                                 loading={loading}
                                 className='bg-transparent border-0 p-0'
