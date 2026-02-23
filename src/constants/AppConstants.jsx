@@ -1,13 +1,26 @@
 import { FiUsers } from 'react-icons/fi'
-
-export const navLinks = [
-  { id: 1, name: 'Users', icon: <FiUsers size={20} />, path: '/users' },
-]
 export const USER_ROLES = {
   MANAGER: "MANAGER",
   EMPLOYEE: "EMPLOYEE",
   HR: "HR",
 };
+export const navLinks = [
+  {
+    id: 1,
+    name: "Users",
+    icon: <FiUsers size={20} />,
+    path: "/users",
+    roles: [USER_ROLES.HR, USER_ROLES.MANAGER],
+  },
+  {
+    id: 1,
+    name: "Log Time",
+    icon: <FiUsers size={20} />,
+    path: "/time-log",
+    roles: [USER_ROLES.EMPLOYEE, USER_ROLES.MANAGER],
+  },
+];
+
 
 export const ROLE_OPTIONS = [
   { label: "Manager", value: USER_ROLES.MANAGER },
@@ -19,5 +32,6 @@ export const NAVIGATION_URLS = {
   AUTH_URLS: {
     SIGNIN: "/signin"
   },
-  USERS: "/users"
+  USERS: "/users",
+  TIME_LOG: "/time-log",
 };

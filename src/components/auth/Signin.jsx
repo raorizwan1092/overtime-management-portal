@@ -11,7 +11,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { SignInUser } from "@/services/Users";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { NAVIGATION_URLS } from "@/constants/AppConstants";
+import { NAVIGATION_URLS, USER_ROLES } from "@/constants/AppConstants";
 
 const Signin = () => {
     const theme = useTheme()
@@ -30,12 +30,18 @@ const Signin = () => {
         try {
             const response = await SignInUser(values);
 
-
             if (response?.data.success) {
-                toast.success("Login successful");
-                router.push(NAVIGATION_URLS.USERS);
-            }
+                const role = response?.data?.user?.role;
 
+                toast.success("Login successful");
+                console.log("role",role)
+
+                router.push(
+                    role === USER_ROLES.HR
+                        ? NAVIGATION_URLS.USERS
+                        : NAVIGATION_URLS.TIME_LOG
+                );
+            }
         } catch (error) {
             toast.error(
                 error?.response?.data?.error || "Login failed"
@@ -44,6 +50,8 @@ const Signin = () => {
             setSubmitting(false);
         }
     };
+
+
 
 
     return (

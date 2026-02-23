@@ -6,16 +6,22 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Nav } from 'react-bootstrap'
 import { navLinks } from '@/constants/AppConstants'
+import { useAuth } from '@/contexts/AuthContext';
 
 
 
 const DashboardSidebar = ({ handleClose }) => {
     const theme = useTheme()
+    const { user } = useAuth()
+    console.log("user", user)
     const pathname = usePathname()
 
     const isActive = (path) => {
         return pathname === path || pathname.startsWith(path + '/')
     }
+    const filteredLinks = navLinks.filter((link) =>
+        link.roles.includes(user?.role)
+    );
 
     return (
         <div
@@ -28,7 +34,7 @@ const DashboardSidebar = ({ handleClose }) => {
             }}
         >
             <Nav className="d-flex py-3 px-2 w-100 flex-column">
-                {navLinks.map((link) => {
+                {filteredLinks.map((link) => {
                     const active = isActive(link.path)
 
                     return (

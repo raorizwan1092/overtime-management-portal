@@ -10,7 +10,7 @@ export function proxy(request) {
   if (token && (isSignin || isRoot)) {
     return NextResponse.redirect(new URL(NAVIGATION_URLS.USERS, request.url));
   }
-  if (!token && (pathname.startsWith("NAVIGATION_URLS.USERS") || isRoot)) {
+  if (!token && (pathname.startsWith(NAVIGATION_URLS.USERS) || isRoot)) {
     return NextResponse.redirect(new URL(NAVIGATION_URLS.AUTH_URLS.SIGNIN, request.url));
   }
 
