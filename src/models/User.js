@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       sparse: true,
       trim: true,
     },
+    hourlyRate: {
+      type: Number,
+      required: true,
+    },
     password: {
       type: String,
       minlength: [6, "Password must be at least 6 characters"],

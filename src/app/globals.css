@@ -1,20 +1,32 @@
-body{
+body {
     background-color: black !important;
 }
-thead th{
-    background-color: black !important;
-    color: #fff !important;
-}
-tbody tr td{
+
+thead th {
     background-color: black !important;
     color: #fff !important;
 }
-.pagination .page-link{
+
+tbody tr td {
     background-color: black !important;
     color: #fff !important;
 }
-.pagination .active .page-link{
+
+.pagination .page-link {
+    background-color: black !important;
+    color: #fff !important;
+}
+
+.pagination .active .page-link {
     background-color: white !important;
     color: #000 !important;
     border-color: white !important;
+}
+
+.user-input input {
+    border-color: #424141;
+}
+
+.user-input input::placeholder {
+    color: #424141 !important;
 }

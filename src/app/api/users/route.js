@@ -65,34 +65,63 @@ export async function GET(req) {
 
 export async function POST(req) {
   const decoded = verifyToken(req);
+
   if (!decoded || decoded.role !== USER_ROLES.HR) {
     return NextResponse.json(
       { success: false, error: "Forbidden" },
       { status: 403 }
     );
   }
+
   try {
     await connectDB();
 
-    const { name, email, phone, role } = await req.json();
+    const { name, email, phone, role, hourlyRate } = await req.json();
+
     if (!Object.values(USER_ROLES).includes(role)) {
       return NextResponse.json(
         { success: false, error: "Invalid role" },
         { status: 400 }
       );
     }
-    const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
-    if (existingUser) {
+
+    if (!hourlyRate || isNaN(hourlyRate) || Number(hourlyRate) <= 0) {
       return NextResponse.json(
-        { success: false, error: "User with this email or phone already exists" },
+        { success: false, error: "Invalid hourly rate" },
         { status: 400 }
       );
     }
 
+    // Check individually
+    const existingEmailUser = await User.findOne({ email });
+    if (existingEmailUser) {
+      return NextResponse.json(
+        { success: false, error: "User with this email already exists" },
+        { status: 400 }
+      );
+    }
+
+    const existingPhoneUser = await User.findOne({ phone });
+    if (existingPhoneUser) {
+      return NextResponse.json(
+        { success: false, error: "User with this phone number already exists" },
+        { status: 400 }
+      );
+    }
+
+    // Create new user
     const generatedPassword = Math.random().toString(36).slice(-8);
-    console.log("Generated password (plain text):", generatedPassword);
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
-    const newUser = await User.create({ name, email, phone, role, password: hashedPassword });
+
+    const newUser = await User.create({
+      name,
+      email,
+      phone,
+      role,
+      hourlyRate: Number(hourlyRate),
+      password: hashedPassword,
+    });
+
     try {
       await sendEmail({
         to: newUser.email,
@@ -115,9 +144,10 @@ export async function POST(req) {
         email: newUser.email,
         phone: newUser.phone,
         role: newUser.role,
-        password: hashedPassword,
+        hourlyRate: newUser.hourlyRate,
       },
     });
+
   } catch (error) {
     console.error("Error creating user:", error);
     return NextResponse.json(
@@ -126,3 +156,4 @@ export async function POST(req) {
     );
   }
 }
+

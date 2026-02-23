@@ -17,6 +17,7 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
         email: "",
         phone: "",
         role: "",
+        hourlyRate: "",
     };
 
     const validationSchema = Yup.object({
@@ -24,23 +25,25 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
         email: Yup.string().email("Invalid email").required("Email is required"),
         phone: Yup.string().required("Phone number is required"),
         role: Yup.string().required("Role is required"),
+        hourlyRate: Yup.number()
+            .typeError("Hourly rate must be a number")
+            .positive("Hourly rate must be positive")
+            .required("Hourly rate is required"),
     });
 
     const handleSubmit = async (values) => {
         try {
             const response = await createUser(values);
-            console.log("response", response)
 
             if (response?.data.success) {
-                toast.success("User Created Successfully")
+                toast.success("User Created Successfully");
                 setShowCanvas(false);
-                fetchUsers()
+                fetchUsers();
             }
         } catch (err) {
-            toast.error("Network error:", err);
+            toast.error(err?.response?.data?.error || "Something went wrong");
         }
     };
-
 
     return (
         <Canvas
@@ -55,7 +58,7 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
-                    {({ handleSubmit, handleChange, values, errors, touched }) => (
+                    {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
                         <Form onSubmit={handleSubmit}>
                             <TextInput
                                 label="Name"
@@ -85,6 +88,16 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
                                 touched={touched.phone}
                             />
 
+                            <TextInput
+                                label="Hourly Rate"
+                                name="hourlyRate"
+                                type="number"
+                                value={values.hourlyRate}
+                                onChange={handleChange}
+                                error={errors.hourlyRate}
+                                touched={touched.hourlyRate}
+                            />
+
                             <SelectInput
                                 label="Role"
                                 name="role"
@@ -99,9 +112,9 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
                                 type="submit"
                                 label="Add User"
                                 fullWidth
+                                loading={isSubmitting}
                             />
                         </Form>
-
                     )}
                 </Formik>
             </div>
