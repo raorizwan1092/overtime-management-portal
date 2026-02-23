@@ -1,4 +1,9 @@
-import { FiUsers } from 'react-icons/fi'
+import {
+  FiUsers,
+  FiClock,
+  FiSettings
+} from "react-icons/fi";
+
 export const USER_ROLES = {
   MANAGER: "MANAGER",
   EMPLOYEE: "EMPLOYEE",
@@ -13,11 +18,22 @@ export const navLinks = [
     roles: [USER_ROLES.HR, USER_ROLES.MANAGER],
   },
   {
-    id: 1,
+    id: 2,
     name: "Log Time",
-    icon: <FiUsers size={20} />,
+    icon: <FiClock size={20} />,
     path: "/time-log",
     roles: [USER_ROLES.EMPLOYEE, USER_ROLES.MANAGER],
+  },
+  {
+    id: 3,
+    name: "Settings",
+    icon: <FiSettings size={20} />,
+    path: "/settings",
+    roles: [
+      USER_ROLES.HR,
+      USER_ROLES.EMPLOYEE,
+      USER_ROLES.MANAGER,
+    ],
   },
 ];
 
