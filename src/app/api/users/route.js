@@ -3,6 +3,8 @@ import connectDB from "@/lib/dbconnection";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { sendEmail } from "@/lib/mailer";
+import { welcomeEmailTemplate } from "@/lib/emails/WelcomeEmail";
 const LIMIT = process.env.PAGE_LIMIT || 10;
 
 export async function GET(req) {
@@ -75,6 +77,19 @@ export async function POST(req) {
     console.log("Generated password (plain text):", generatedPassword);
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
     const newUser = await User.create({ name, email, phone, role, password: hashedPassword });
+    try {
+      await sendEmail({
+        to: newUser.email,
+        subject: "Welcome to Our App!",
+        html: welcomeEmailTemplate({
+          name: newUser.name,
+          email: newUser.email,
+          password: generatedPassword,
+        }),
+      });
+    } catch (err) {
+      console.error("Error sending welcome email:", err);
+    }
 
     return NextResponse.json({
       success: true,
