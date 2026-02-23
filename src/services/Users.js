@@ -12,3 +12,6 @@ export const SignInUser = function (data) {
 export const Logout = function (data) {
     return GetApiData(`/logout`, 'POST', data, true);
 }
+export const GetUserDetails = function () {
+    return GetApiData(`/user`, 'GET', null, true);
+}

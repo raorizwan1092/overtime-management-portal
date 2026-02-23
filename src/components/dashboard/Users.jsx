@@ -1,7 +1,7 @@
 "use client";
 import { GetAllUsers } from "@/services/Users";
 import React, { useEffect, useState } from "react";
-import { Table, Pagination, Spinner, Container, Button } from "react-bootstrap";
+import { Table, Pagination, Spinner } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { FiEye } from "react-icons/fi";
 import TableCard from "../shared/TableCard";
