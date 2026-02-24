@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { GetUserDetails } from "@/services/Users";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
