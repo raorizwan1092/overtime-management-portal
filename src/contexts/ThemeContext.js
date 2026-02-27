@@ -14,7 +14,8 @@ const theme = {
     btnText: "#000000",
     radius: "8px",
     cardBackground: "#1c1b1b",
-    btnBackground:'#ffffff'
+    btnBackground: '#ffffff',
+    lightGray: "#696969"
 };
 
 const ThemeContext = createContext(theme);

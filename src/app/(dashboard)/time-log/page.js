@@ -1,8 +1,11 @@
+import TimelogPage from '@/components/Timelog/Timelog'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <TimelogPage />
+    </div>
   )
 }
 

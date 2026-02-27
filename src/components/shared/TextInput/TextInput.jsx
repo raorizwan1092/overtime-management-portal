@@ -10,13 +10,13 @@ const TextInput = ({
     onChange,
     error,
     touched,
-    disabled= false
+    disabled = false
 }) => {
     const theme = useTheme()
 
     return (
         <Form.Group className="mb-3 text-start" >
-            <Form.Label style={{color:theme?.textColor}}>
+            <Form.Label style={{ color: theme?.textColor }}>
                 {label}
             </Form.Label>
 
@@ -28,6 +28,8 @@ const TextInput = ({
                 isInvalid={touched && error}
                 disabled={disabled}
                 style={{ backgroundColor: disabled ? '#232323' : theme.background, border: theme.border, color: theme.textColor }}
+                as={type === "textarea" ? "textarea" : "input"}
+                rows={type === "textarea" ? 3 : undefined}
             />
 
             <Form.Control.Feedback type="invalid">

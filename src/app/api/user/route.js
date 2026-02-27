@@ -23,6 +23,7 @@ export async function GET(req) {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                hourlyRate: user.hourlyRate,
             },
         });
     } catch (err) {
