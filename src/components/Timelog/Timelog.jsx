@@ -126,7 +126,7 @@ const Timelog = () => {
                         if (isFutureDate) cardStyle.color = theme.grayText;
 
                         return (
-                            <Col key={index} xs={2} style={{ marginLeft: index === 0 ? `${(firstDayOfMonth.getDay() * 100) / 7}%` : "0" }}>
+                            <Col key={index} xs={6} md={3} lg={2} style={{ marginLeft: index === 0 ? `${(firstDayOfMonth.getDay() * 100) / 7}%` : "0" }}>
                                 <Card style={cardStyle} onClick={() => handleDateClick(date)}>
                                     <Card.Body className="p-2">
                                         <div className="d-flex justify-content-between align-items-center">
@@ -156,14 +156,14 @@ const Timelog = () => {
             )}
 
 
-            {error && (
+            {/* {error && (
                 <div style={{ color: theme.error, padding: "10px", marginTop: "10px", border: `1px solid ${theme.error}`, borderRadius: theme.radius }}>
                     {error}
                     <Button variant="link" onClick={() => setError("")} style={{ color: theme.error, textDecoration: "none", float: "right" }}>
                         ×
                     </Button>
                 </div>
-            )}
+            )} */}
 
             <TimeLogCanvas
                 show={showCanvas}
