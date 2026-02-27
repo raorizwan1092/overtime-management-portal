@@ -27,11 +27,26 @@ const Timelog = () => {
             setLoading(true);
             const month = format(currentDate, "MM");
             const year = format(currentDate, "yyyy");
-            const response = await axios.get(`/api/time-logs?month=${month}&year=${year}`);
+
+            const response = await axios.get(
+                `/api/timelog?month=${month}&year=${year}`
+            );
+
             const logs = {};
+
             response.data.forEach(log => {
-                logs[log.log_date] = { hours: log.hours, description: log.description };
+                const formattedDate = format(
+                    new Date(log.date),
+                    "yyyy-MM-dd"
+                );
+
+                logs[formattedDate] = {
+                    hours: log.hours,
+                    description: log.description,
+                    status: log.status,
+                };
             });
+
             setTimeLogs(logs);
             setError("");
         } catch (err) {
@@ -53,18 +68,23 @@ const Timelog = () => {
 
     const handleDateClick = date => {
         if (isFuture(date)) return;
-        setSelectedDate(date);
+
         const dateStr = format(date, "yyyy-MM-dd");
-        setFormData(timeLogs[dateStr] || { hours: "", description: "" });
+        const log = timeLogs[dateStr];
+        if (log?.status === "APPROVED") return;
+
+        setSelectedDate(date);
+        setFormData(log || { hours: "", description: "" });
         setShowCanvas(true);
     };
+
 
 
     const handleSaveLog = async values => {
         try {
             setSaving(true);
             const logData = { date: format(selectedDate, "yyyy-MM-dd"), hours: parseFloat(values.hours), description: values.description };
-            await axios.post("/api/time-logs", logData);
+            await axios.post("/api/timelog", logData);
             await fetchTimeLogs();
             setShowCanvas(false);
         } catch (err) {
@@ -136,10 +156,39 @@ const Timelog = () => {
                                                 <small>{format(date, "d")}</small> {/* Day of month */}
                                             </div>
                                             {log && (
-                                                <span style={{ backgroundColor: theme.secondary, color: theme.textColor, padding: "2px 6px", borderRadius: "4px", fontSize: "0.75rem" }}>
-                                                    {log.hours}h
-                                                </span>
+                                                <div className="d-flex flex-column align-items-end">
+                                                    <span
+                                                        style={{
+                                                            padding: "2px 6px",
+                                                            borderRadius: "4px",
+                                                            fontSize: "0.65rem",
+                                                            backgroundColor:
+                                                                log.status === "APPROVED"
+                                                                    ? "#28a745"
+                                                                    : log.status === "REJECTED"
+                                                                        ? "#dc3545"
+                                                                        : "#ffc107",
+                                                            color: "white",
+                                                            marginBottom: "4px"
+                                                        }}
+                                                    >
+                                                        {log.status}
+                                                    </span>
+
+                                                    <span
+                                                        style={{
+                                                            backgroundColor: theme.secondary,
+                                                            color: theme.textColor,
+                                                            padding: "2px 6px",
+                                                            borderRadius: "4px",
+                                                            fontSize: "0.75rem"
+                                                        }}
+                                                    >
+                                                        {log.hours}h
+                                                    </span>
+                                                </div>
                                             )}
+
                                         </div>
                                         {log?.description && (
                                             <small style={{ color: theme.grayText }} className="d-block text-truncate">
