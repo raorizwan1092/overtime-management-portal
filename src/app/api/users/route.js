@@ -25,6 +25,9 @@ export async function GET(req) {
     const limit = parseInt(searchParams.get("limit")) || LIMIT;
     const search = searchParams.get("search") || "";
     const skip = (page - 1) * limit;
+    const baseQuery = {
+      createdBy: decoded.id, // ✅ filter by HR
+    };
 
     const query = search
       ? {
@@ -65,7 +68,6 @@ export async function GET(req) {
 
 export async function POST(req) {
   const decoded = verifyToken(req);
-
   if (!decoded || decoded.role !== USER_ROLES.HR) {
     return NextResponse.json(
       { success: false, error: "Forbidden" },
@@ -120,7 +122,9 @@ export async function POST(req) {
       role,
       hourlyRate: Number(hourlyRate),
       password: hashedPassword,
+      createdBy: decoded.userId,
     });
+    
 
     try {
       await sendEmail({

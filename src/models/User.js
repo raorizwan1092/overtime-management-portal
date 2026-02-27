@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema(
       enum: [USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE, USER_ROLES.HR],
       default: USER_ROLES.EMPLOYEE,
     },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
   },
   {
