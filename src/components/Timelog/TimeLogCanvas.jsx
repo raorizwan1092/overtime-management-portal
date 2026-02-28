@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import TextInput from "../shared/TextInput/TextInput";
 import CustomButton from "../shared/Button/Button";
@@ -8,10 +8,13 @@ import * as Yup from "yup";
 import Canvas from "../shared/Canvas";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { getRule } from "@/services/Rules";
+import { calculateTotalAmount } from "@/utils/calculateTotalAmount";
 
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
     const { user } = useAuth();
-    const theme = useTheme()
+    const theme = useTheme();
+    const [rule, setRule] = useState()
 
     const TimeLogSchema = Yup.object().shape({
         hours: Yup.number()
@@ -20,6 +23,20 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
             .required("Hours are required"),
         description: Yup.string().max(255, "Description too long"),
     });
+    useEffect(() => {
+        const fetchRule = async () => {
+            try {
+                const response = await getRule();
+                if (response?.data?.success && response?.data?.rules?.length > 0) {
+                    setRule(response.data.rules[0]);
+                }
+            } catch (err) {
+                toast.error("Failed to fetch rules");
+            }
+        };
+        fetchRule();
+    }, []);
+
 
     return (
         <Canvas
@@ -41,10 +58,11 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                 }}
             >
                 {({ values, errors, touched, handleChange, handleSubmit, isSubmitting }) => {
-                    const totalAmount =
-                        values.hours && user?.hourlyRate
-                            ? parseFloat(values.hours) * parseFloat(user.hourlyRate)
-                            : 0;
+                    const totalAmount = calculateTotalAmount(
+                        Number(values.hours),
+                        user?.hourlyRate || 0,
+                        rule
+                    );
 
                     return (
                         <FormikForm className="p-3">

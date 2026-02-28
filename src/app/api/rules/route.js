@@ -8,10 +8,10 @@ const LIMIT = process.env.PAGE_LIMIT || 10;
 
 
 export async function GET(req) {
-    const decoded = verifyToken(req);
-    if (!decoded || decoded.role !== USER_ROLES.HR) {
-        return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
-    }
+    // const decoded = verifyToken(req);
+    // if (!decoded || decoded.role !== USER_ROLES.HR) {
+    //     return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+    // }
 
     try {
         await connectDB();

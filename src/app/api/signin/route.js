@@ -39,6 +39,7 @@ export async function POST(req) {
             {
                 userId: user._id,
                 role: user.role,
+                hourlyRate: user.hourlyRate,
             },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }

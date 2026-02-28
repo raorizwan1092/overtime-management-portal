@@ -1,6 +1,8 @@
 import { TIMELOG_STATUS } from "@/constants/AppConstants";
 import connectDB from "@/lib/dbconnection";
+import Rules from "@/models/Rules";
 import TimeLog from "@/models/TimeLog";
+import { calculateTotalAmount } from "@/utils/calculateTotalAmount";
 import { verifyToken } from "@/utils/verifyToken";
 import { NextResponse } from "next/server";
 
@@ -39,50 +41,32 @@ export async function GET(req) {
 
 export async function POST(req) {
   const decoded = verifyToken(req);
-
-  if (!decoded) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!decoded) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();
 
   const { date, hours, description } = await req.json();
 
-  if (!date) {
-    return NextResponse.json(
-      { error: "Date is required" },
-      { status: 400 }
-    );
-  }
-
-  if (hours < 0 || hours > 24) {
-    return NextResponse.json(
-      { error: "Invalid hours" },
-      { status: 400 }
-    );
-  }
+  if (!date) return NextResponse.json({ error: "Date is required" }, { status: 400 });
+  if (hours < 0 || hours > 24) return NextResponse.json({ error: "Invalid hours" }, { status: 400 });
 
   const dateOnly = new Date(date);
   dateOnly.setUTCHours(0, 0, 0, 0);
 
-  const existingLog = await TimeLog.findOne({
-    user: decoded.userId,
-    date: dateOnly,
-  });
-
-  if (existingLog && existingLog.status === TIMELOG_STATUS?.APPROVED) {
-    return NextResponse.json(
-      { error: "Cannot edit approved log" },
-      { status: 400 }
-    );
+  const existingLog = await TimeLog.findOne({ user: decoded.userId, date: dateOnly });
+  if (existingLog && existingLog.status === TIMELOG_STATUS.APPROVED) {
+    return NextResponse.json({ error: "Cannot edit approved log" }, { status: 400 });
   }
+  const rules = await Rules.findOne().sort({ createdAt: -1 });
 
+  const totalAmount = calculateTotalAmount(hours, decoded.hourlyRate, rules);
   const log = await TimeLog.findOneAndUpdate(
     { user: decoded.userId, date: dateOnly },
     {
       hours,
       description,
-      status: TIMELOG_STATUS?.PENDING,
+      status: TIMELOG_STATUS.PENDING,
+      totalAmount,
     },
     { upsert: true, new: true }
   );

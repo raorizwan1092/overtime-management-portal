@@ -37,7 +37,10 @@ const timeLogSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-
+    totalAmount: {
+      type: Number,
+      default: 0,
+    },    
     approvedAt: {
       type: Date,
     },
