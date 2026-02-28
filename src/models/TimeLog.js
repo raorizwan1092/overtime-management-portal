@@ -1,3 +1,4 @@
+import { TIMELOG_STATUS } from "@/constants/AppConstants";
 import mongoose from "mongoose";
 
 const timeLogSchema = new mongoose.Schema(
@@ -28,8 +29,8 @@ const timeLogSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["PENDING", "APPROVED", "REJECTED"],
-      default: "PENDING",
+      enum: Object.values(TIMELOG_STATUS),
+      default: TIMELOG_STATUS.PENDING,
     },
 
     approvedBy: {
