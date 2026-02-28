@@ -59,3 +59,9 @@ export const NAVIGATION_URLS = {
   USERS: "/users",
   TIME_LOG: "/time-log",
 };
+
+export const TIMELOG_STATUS = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+};

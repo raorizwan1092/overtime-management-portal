@@ -1,3 +1,4 @@
+import { TIMELOG_STATUS } from "@/constants/AppConstants";
 import connectDB from "@/lib/dbconnection";
 import TimeLog from "@/models/TimeLog";
 import { verifyToken } from "@/utils/verifyToken";
@@ -69,7 +70,7 @@ export async function POST(req) {
     date: dateOnly,
   });
 
-  if (existingLog && existingLog.status === "APPROVED") {
+  if (existingLog && existingLog.status === TIMELOG_STATUS?.APPROVED) {
     return NextResponse.json(
       { error: "Cannot edit approved log" },
       { status: 400 }
@@ -81,7 +82,7 @@ export async function POST(req) {
     {
       hours,
       description,
-      status: "PENDING",
+      status: TIMELOG_STATUS?.PENDING,
     },
     { upsert: true, new: true }
   );

@@ -6,6 +6,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isTod
 import axios from "axios";
 import { useTheme } from "@/contexts/ThemeContext";
 import TimeLogCanvas from "./TimeLogCanvas";
+import { addTimeLog, getTimeLog } from "@/services/TimeLog";
 
 const Timelog = () => {
     const theme = useTheme();
@@ -25,16 +26,15 @@ const Timelog = () => {
     const fetchTimeLogs = async () => {
         try {
             setLoading(true);
+
             const month = format(currentDate, "MM");
             const year = format(currentDate, "yyyy");
 
-            const response = await axios.get(
-                `/api/timelog?month=${month}&year=${year}`
-            );
+            const data = await getTimeLog(month, year);
 
             const logs = {};
 
-            response.data.forEach(log => {
+            data?.data?.forEach(log => {
                 const formattedDate = format(
                     new Date(log.date),
                     "yyyy-MM-dd"
@@ -56,6 +56,7 @@ const Timelog = () => {
             setLoading(false);
         }
     };
+
 
     const getDaysInMonth = () => eachDayOfInterval({ start: startOfMonth(currentDate), end: endOfMonth(currentDate) });
 
@@ -84,7 +85,7 @@ const Timelog = () => {
         try {
             setSaving(true);
             const logData = { date: format(selectedDate, "yyyy-MM-dd"), hours: parseFloat(values.hours), description: values.description };
-            await axios.post("/api/timelog", logData);
+            await addTimeLog(logData);
             await fetchTimeLogs();
             setShowCanvas(false);
         } catch (err) {
