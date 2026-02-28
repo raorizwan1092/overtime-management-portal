@@ -44,6 +44,7 @@ const Timelog = () => {
                     hours: log.hours,
                     description: log.description,
                     status: log.status,
+                    totalAmount: log.totalAmount || 0,
                 };
             });
 
@@ -114,7 +115,7 @@ const Timelog = () => {
             {/* Calendar Days */}
             {loading ? (
                 <div className="text-center py-5">
-                    <Spinner animation="border" style={{ color: theme.secondary }} />
+                    <Spinner animation="border" style={{ color: theme.textColor }} />
                 </div>
             ) : (
                 <Row className="g-2 mt-2 d-flex justify-content-center">
@@ -163,13 +164,13 @@ const Timelog = () => {
                                                             padding: "2px 6px",
                                                             borderRadius: "4px",
                                                             fontSize: "0.65rem",
-                                                            backgroundColor:
+                                                            color:
                                                                 log.status === "APPROVED"
                                                                     ? "#28a745"
                                                                     : log.status === "REJECTED"
                                                                         ? "#dc3545"
                                                                         : "#ffc107",
-                                                            color: "white",
+                                                            backgroundColor: theme?.background,
                                                             marginBottom: "4px"
                                                         }}
                                                     >
@@ -178,7 +179,7 @@ const Timelog = () => {
 
                                                     <span
                                                         style={{
-                                                            backgroundColor: theme.secondary,
+                                                            backgroundColor: theme.background,
                                                             color: theme.textColor,
                                                             padding: "2px 6px",
                                                             borderRadius: "4px",
@@ -186,6 +187,18 @@ const Timelog = () => {
                                                         }}
                                                     >
                                                         {log.hours}h
+                                                    </span>
+                                                    <span
+                                                        style={{
+                                                            padding: "2px 6px",
+                                                            borderRadius: "4px",
+                                                            fontSize: "0.65rem",
+                                                            color: theme?.textColor,
+                                                            backgroundColor: theme?.background,
+                                                            marginBottom: "4px"
+                                                        }}
+                                                    >
+                                                        {log.totalAmount||0}
                                                     </span>
                                                 </div>
                                             )}
