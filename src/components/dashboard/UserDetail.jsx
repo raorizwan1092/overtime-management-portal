@@ -85,6 +85,9 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
                             <div>
                                 <strong>Description:</strong> {log.description}
                             </div>
+                            <div>
+                                <strong>Amount:</strong> {log.totalAmount}
+                            </div>
 
                             <div className="mb-2">
                                 <strong>Status:</strong>{" "}
