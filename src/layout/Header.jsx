@@ -7,7 +7,7 @@ import SmallScreenSidebar from './SmallScreenSidebar';
 import CustomButton from '@/components/shared/Button/Button';
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Logout } from '@/services/Users';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { NAVIGATION_URLS } from '@/constants/AppConstants';
 
@@ -16,6 +16,7 @@ const NavigationBar = () => {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const pathname = usePathname();
 
     const handleLogout = async () => {
         try {
@@ -33,6 +34,8 @@ const NavigationBar = () => {
             setLoading(false);
         }
     };
+    const heading = pathname.replace("/", "").replace("-", " ").replace(/\b\w/g, c => c.toUpperCase()) || "Page";
+
 
     return (
         <div>
@@ -56,7 +59,7 @@ const NavigationBar = () => {
                                 style={{ cursor: "pointer" }}
                                 onClick={() => setShow(true)}
                             />
-                            <h3 className='mb-0'>Heading</h3>
+                            <h3 className='mb-0'>{heading}</h3>
                         </div>
 
                         <div>
