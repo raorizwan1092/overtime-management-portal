@@ -20,6 +20,9 @@ export const GetUserDetails = function () {
 export const changePassword = async (newPassword) => {
     return GetApiData("/change-password", "POST", { newPassword }, true);
 };
+export const updatePassword = async (currentPassword, newPassword) => {
+    return GetApiData("/update-password", "POST", { currentPassword, newPassword }, true);
+};
 export const updateUser = async (data) => {
     return GetApiData("/user", "PUT", data, true);
 };
