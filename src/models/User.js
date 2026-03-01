@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    mustChangePassword: {
+      type: Boolean,
+      default: true,
+    },
 
   },
   {

@@ -58,6 +58,7 @@ export const NAVIGATION_URLS = {
   },
   USERS: "/users",
   TIME_LOG: "/time-log",
+  CHANGE_PASSWORD: "/change-password",
 };
 
 export const TIMELOG_STATUS = {

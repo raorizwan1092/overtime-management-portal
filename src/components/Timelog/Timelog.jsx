@@ -7,6 +7,7 @@ import axios from "axios";
 import { useTheme } from "@/contexts/ThemeContext";
 import TimeLogCanvas from "./TimeLogCanvas";
 import { addTimeLog, getTimeLog } from "@/services/TimeLog";
+import CustomButton from "../shared/Button/Button";
 
 const Timelog = () => {
     const theme = useTheme();
@@ -99,20 +100,16 @@ const Timelog = () => {
 
     return (
         <div style={{ backgroundColor: theme.background, color: theme.textColor }}>
-            <Row className="mb-4 align-items-center">
+            <Row className="my-2 align-items-center">
                 <Col className="d-flex justify-content-between align-items-center">
-                    <Button style={{ border: `1px solid ${theme.primary}`, background: "transparent", color: theme.primary }} onClick={goToPreviousMonth}>
-                        &larr; Previous
-                    </Button>
+                    <CustomButton label={"Previous"} onClick={goToPreviousMonth} />
+                  
+
                     <h3>{format(currentDate, "MMMM yyyy")}</h3>
-                    <Button style={{ border: `1px solid ${theme.primary}`, background: "transparent", color: theme.primary }} onClick={goToNextMonth} disabled={isNextMonthDisabled()}>
-                        Next &rarr;
-                    </Button>
+                    <CustomButton label={"Next"} onClick={goToNextMonth} disabled={isNextMonthDisabled()} />
                 </Col>
             </Row>
 
-
-            {/* Calendar Days */}
             {loading ? (
                 <div className="text-center py-5">
                     <Spinner animation="border" style={{ color: theme.textColor }} />
@@ -124,7 +121,6 @@ const Timelog = () => {
                         const log = timeLogs[dateStr];
                         const isFutureDate = isFuture(date);
                         const isSelected = selectedDate && dateStr === format(selectedDate, "yyyy-MM-dd");
-                        const firstDayOfMonth = startOfMonth(currentDate);
 
                         let cardStyle = {
                             borderRadius: theme.radius,
@@ -148,14 +144,14 @@ const Timelog = () => {
                         if (isFutureDate) cardStyle.color = theme.grayText;
 
                         return (
-                            <Col key={index} xs={6} md={3} lg={2} style={{ marginLeft: index === 0 ? `${(firstDayOfMonth.getDay() * 100) / 7}%` : "0" }}>
+                            <Col key={index} xs={6} md={3} lg={2}>
                                 <Card style={cardStyle} onClick={() => handleDateClick(date)}>
                                     <Card.Body className="p-2">
                                         <div className="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <small style={{ fontWeight: "bold" }}>{format(date, "EEE")}</small> {/* Weekday */}
                                                 <br />
-                                                <small>{format(date, "d")}</small> {/* Day of month */}
+                                                <small>{format(date, "d")}</small>
                                             </div>
                                             {log && (
                                                 <div className="d-flex flex-column align-items-end">
@@ -198,7 +194,7 @@ const Timelog = () => {
                                                             marginBottom: "4px"
                                                         }}
                                                     >
-                                                        {log.totalAmount||0}
+                                                        {log.totalAmount || 0}
                                                     </span>
                                                 </div>
                                             )}
@@ -217,17 +213,6 @@ const Timelog = () => {
                     })}
                 </Row>
             )}
-
-
-            {/* {error && (
-                <div style={{ color: theme.error, padding: "10px", marginTop: "10px", border: `1px solid ${theme.error}`, borderRadius: theme.radius }}>
-                    {error}
-                    <Button variant="link" onClick={() => setError("")} style={{ color: theme.error, textDecoration: "none", float: "right" }}>
-                        ×
-                    </Button>
-                </div>
-            )} */}
-
             <TimeLogCanvas
                 show={showCanvas}
                 onHide={() => {

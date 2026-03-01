@@ -134,6 +134,7 @@ export async function POST(req) {
           name: newUser.name,
           email: newUser.email,
           password: generatedPassword,
+          mustChangePassword: true,
         }),
       });
     } catch (err) {

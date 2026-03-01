@@ -36,13 +36,17 @@ const Signin = () => {
                 const role = response?.data?.user?.role;
                 const userData = response?.data?.user;
                 setUser(userData);
+                console.log("userData", userData);
                 toast.success("Login successful");
-
-                router.push(
-                    role === USER_ROLES.HR
-                        ? NAVIGATION_URLS.USERS
-                        : NAVIGATION_URLS.TIME_LOG
-                );
+                if (userData?.mustChangePassword) {
+                    router.push(NAVIGATION_URLS.CHANGE_PASSWORD);
+                } else {
+                    router.push(
+                        role === USER_ROLES.HR
+                            ? NAVIGATION_URLS.USERS
+                            : NAVIGATION_URLS.TIME_LOG
+                    );
+                }
             }
         } catch (error) {
             toast.error(

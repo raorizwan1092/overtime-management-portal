@@ -17,3 +17,6 @@ export const Logout = function (data) {
 export const GetUserDetails = function () {
     return GetApiData(`/user`, 'GET', null, true);
 }
+export const changePassword = async (newPassword) => {
+    return GetApiData("/change-password", "POST", { newPassword }, true);
+  };
