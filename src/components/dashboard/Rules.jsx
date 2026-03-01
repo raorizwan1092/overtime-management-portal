@@ -8,6 +8,7 @@ import CustomButton from "../shared/Button/Button";
 import { getRule, updateRule } from "@/services/Rules";
 import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
+import TableCard from "../shared/TableCard";
 
 const Rules = () => {
     const [initialValues, setInitialValues] = useState({
@@ -76,15 +77,17 @@ const Rules = () => {
     };
 
     return (
-        <div>
-            <h3 className="text-end">
+        <TableCard>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h4 className="text-white">Rules</h4>
                 <FiEdit
                     size={22}
                     className="cursor-pointer text-white"
                     onClick={() => setIsEditing(!isEditing)}
                     title={isEditing ? "Cancel Editing" : "Edit Rules"}
                 />
-            </h3>
+            </div>
+
 
             <Formik
                 enableReinitialize
@@ -138,7 +141,7 @@ const Rules = () => {
                     </Form>
                 )}
             </Formik>
-        </div>
+        </TableCard>
     );
 };
 
