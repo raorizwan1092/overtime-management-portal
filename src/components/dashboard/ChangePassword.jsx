@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Form } from "react-bootstrap";
@@ -9,12 +9,14 @@ import CustomButton from "../shared/Button/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { NAVIGATION_URLS } from "@/constants/AppConstants";
+import { NAVIGATION_URLS, USER_ROLES } from "@/constants/AppConstants";
 import AuthenticationHeader from "../auth/AuthenticationHeader";
-import { changePassword } from "@/services/Users";
+import { changePassword, Logout } from "@/services/Users";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 const ChangePassword = () => {
     const { user, setUser } = useAuth();
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const initialValues = {
@@ -35,17 +37,36 @@ const ChangePassword = () => {
         try {
             const response = await changePassword(values.newPassword);
             console.log("response", response);
-
             if (response.data.success) {
                 toast.success("Password changed successfully");
+                const updatedUser = { ...user, mustChangePassword: false };
+                console.log("updatedUser", updatedUser);
                 setUser({ ...user, mustChangePassword: false });
-                router.push(NAVIGATION_URLS.TIME_LOG);
                 resetForm();
+                if (updatedUser.role === USER_ROLES.HR) {
+                    router.push(NAVIGATION_URLS.USERS);
+                } else {
+                    router.push(NAVIGATION_URLS.TIME_LOG);
+                }
             }
         } catch (error) {
             toast.error(error?.response?.data?.error || "Failed to change password");
         } finally {
             setSubmitting(false);
+        }
+    };
+    const handleLogout = async () => {
+        try {
+            setLoading(true);
+            const response = await Logout();
+            if (response?.data.success) {
+                toast.success("Logged out successfully");
+                router.push(NAVIGATION_URLS.AUTH_URLS.SIGNIN);
+            }
+        } catch (error) {
+            toast.error(error?.response?.data?.error || "Logout failed");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -88,6 +109,13 @@ const ChangePassword = () => {
                             label="Update Password"
                             fullWidth
                             loading={isSubmitting}
+                        />
+                        <CustomButton
+                            label={"Logout"}
+                            onClick={handleLogout}
+                            loading={loading}
+                            fullWidth
+                            className="mt-3"
                         />
                     </Form>
                 )}
