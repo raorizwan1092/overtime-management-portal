@@ -19,7 +19,7 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
     const TimeLogSchema = Yup.object().shape({
         hours: Yup.number()
             .min(0, "Hours cannot be negative")
-            .max(24, "Hours cannot exceed 24")
+            .max(12, "Hours cannot exceed 12")
             .required("Hours are required"),
         description: Yup.string().max(255, "Description too long"),
     });
@@ -76,6 +76,8 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                                 error={errors.hours}
                                 touched={touched.hours}
                                 classNam={"mb-0"}
+                                // min={0}
+                                // max={12}
                             />
                             <TextInput
                                 label="Description (Optional)"

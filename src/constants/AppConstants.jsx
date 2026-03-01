@@ -32,17 +32,17 @@ export const navLinks = [
     path: "/time-log",
     roles: [USER_ROLES.EMPLOYEE, USER_ROLES.MANAGER],
   },
-  // {
-  //   id: 4,
-  //   name: "Settings",
-  //   icon: <FiSettings size={20} />,
-  //   path: "/settings",
-  //   roles: [
-  //     USER_ROLES.HR,
-  //     USER_ROLES.EMPLOYEE,
-  //     USER_ROLES.MANAGER,
-  //   ],
-  // },
+  {
+    id: 4,
+    name: "Settings",
+    icon: <FiSettings size={20} />,
+    path: "/settings",
+    roles: [
+      USER_ROLES.HR,
+      USER_ROLES.EMPLOYEE,
+      USER_ROLES.MANAGER,
+    ],
+  },
 ];
 
 

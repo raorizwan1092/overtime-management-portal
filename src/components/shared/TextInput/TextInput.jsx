@@ -13,7 +13,9 @@ const TextInput = ({
     onChange,
     error,
     touched,
-    disabled = false
+    disabled = false,
+    min,
+    max
 }) => {
     const theme = useTheme()
     const [showPassword, setShowPassword] = useState(false)
@@ -75,6 +77,8 @@ const TextInput = ({
                         }}
                         as={type === "textarea" ? "textarea" : "input"}
                         rows={type === "textarea" ? 3 : undefined}
+                        min={min}
+                        max={max}
                     />
 
                     <Form.Control.Feedback type="invalid">
