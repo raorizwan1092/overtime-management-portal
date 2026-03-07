@@ -43,11 +43,15 @@ const ChangePassword = () => {
                 console.log("updatedUser", updatedUser);
                 setUser({ ...user, mustChangePassword: false });
                 resetForm();
-                if (updatedUser.role === USER_ROLES.HR) {
+                if (
+                    updatedUser.role === USER_ROLES.HR ||
+                    updatedUser.role === USER_ROLES.MANAGER
+                ) {
                     router.push(NAVIGATION_URLS.USERS);
                 } else {
                     router.push(NAVIGATION_URLS.TIME_LOG);
                 }
+
             }
         } catch (error) {
             toast.error(error?.response?.data?.error || "Failed to change password");

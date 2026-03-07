@@ -40,12 +40,17 @@ const userSchema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
     },
     mustChangePassword: {
       type: Boolean,
       default: true,
     },
+    managerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+    
 
   },
   {

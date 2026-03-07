@@ -42,10 +42,11 @@ const Signin = () => {
                     router.push(NAVIGATION_URLS.CHANGE_PASSWORD);
                 } else {
                     router.push(
-                        role === USER_ROLES.HR
+                        role === USER_ROLES.HR || role === USER_ROLES.MANAGER
                             ? NAVIGATION_URLS.USERS
                             : NAVIGATION_URLS.TIME_LOG
                     );
+
                 }
             }
         } catch (error) {

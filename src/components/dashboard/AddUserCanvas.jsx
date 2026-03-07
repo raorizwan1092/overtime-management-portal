@@ -4,21 +4,23 @@ import Canvas from "../shared/Canvas";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Form } from "react-bootstrap";
-import { ROLE_OPTIONS } from "@/constants/AppConstants";
+import { ROLE_OPTIONS, USER_ROLES } from "@/constants/AppConstants";
 import TextInput from "../shared/TextInput/TextInput";
 import SelectInput from "../shared/SelectInput/SelectInput";
 import CustomButton from "../shared/Button/Button";
 import { createUser } from "@/services/Users";
 import toast from "react-hot-toast";
 
-const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
+const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
     const initialValues = {
         name: "",
         email: "",
         phone: "",
         role: "",
         hourlyRate: "",
+        managerId: "",
     };
+
 
     const validationSchema = Yup.object({
         name: Yup.string().required("Name is required"),
@@ -29,7 +31,14 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
             .typeError("Hourly rate must be a number")
             .positive("Hourly rate must be positive")
             .required("Hourly rate is required"),
+
+        managerId: Yup.string().when("role", {
+            is: USER_ROLES?.EMPLOYEE,
+            then: (schema) => schema.required("Manager is required"),
+            otherwise: (schema) => schema.notRequired(),
+        }),
     });
+
 
     const handleSubmit = async (values) => {
         try {
@@ -107,7 +116,20 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers }) => {
                                 error={errors.role}
                                 touched={touched.role}
                             />
-
+                            {values.role === USER_ROLES?.EMPLOYEE && (
+                                <SelectInput
+                                    label="Manager"
+                                    name="managerId"
+                                    value={values.managerId}
+                                    onChange={handleChange}
+                                    options={managers.map((m) => ({
+                                        label: m.name,
+                                        value: m._id,
+                                    }))}
+                                    error={errors.managerId}
+                                    touched={touched.managerId}
+                                />
+                            )}
                             <CustomButton
                                 type="submit"
                                 label="Add User"

@@ -11,8 +11,11 @@ import AddUserCanvas from "./AddUserCanvas";
 import UserDetail from "./UserDetail";
 import CustomButton from "../shared/Button/Button";
 import SharedSpinner from "../shared/Spinner";
+import { USER_ROLES } from "@/constants/AppConstants";
+import { useAuth } from "@/contexts/AuthContext";
 
 const UserTable = () => {
+    const { user } = useAuth()
     const [users, setUsers] = useState([]);
     const [pagination, setPagination] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -58,17 +61,22 @@ const UserTable = () => {
 
     return (
         <div>
-            <div className="d-flex justify-content-end mb-4">
-                <CustomButton
-                    label={
-                        <>
-                            <FaPlus className="me-2" />
-                            Add User
-                        </>
-                    }
-                    onClick={handleAddUser}
-                />
-            </div>
+            {user?.role === USER_ROLES.HR &&
+                <>
+                    <div className="d-flex justify-content-end mb-4">
+                        <CustomButton
+                            label={
+                                <>
+                                    <FaPlus className="me-2" />
+                                    Add User
+                                </>
+                            }
+                            onClick={handleAddUser}
+                        />
+                    </div>
+                </>
+            }
+
             <div className="mb-4 user-input">
                 <Form.Control
                     type="text"
@@ -162,6 +170,7 @@ const UserTable = () => {
                 showCanvas={showAddCanvas}
                 setShowCanvas={setShowAddCanvas}
                 fetchUsers={() => fetchUsers(currentPage, debouncedSearch)}
+                managers={users.filter((u) => u.role === USER_ROLES?.MANAGER)}
             />
 
             <UserDetail

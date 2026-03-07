@@ -16,7 +16,7 @@ export const navLinks = [
     name: "Users",
     icon: <FiUsers size={20} />,
     path: "/users",
-    roles: [USER_ROLES.HR],
+    roles: [USER_ROLES.HR, USER_ROLES.MANAGER],
   },
   {
     id: 2,
