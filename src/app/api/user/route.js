@@ -1,19 +1,16 @@
 import connectDB from "@/lib/dbconnection";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { verifyToken } from "@/utils/verifyToken";
 import { USER_ROLES } from "@/constants/AppConstants";
 
 export async function GET(req) {
     try {
-        await connectDB();
-        const token = req.cookies.get("token")?.value;
-
-        if (!token) {
-            return NextResponse.json({ user: null }, { status: 401 });
+        const decoded = verifyToken(req);
+        if (!decoded) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        await connectDB();
         const user = await User.findById(decoded.userId);
 
         if (!user) {
