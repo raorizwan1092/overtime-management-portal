@@ -24,7 +24,7 @@ const Signin = () => {
         password: "",
     };
 
-    
+
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -94,7 +94,7 @@ const Signin = () => {
                         />
 
                         <div className="text-end mb-3">
-                            <Link href="#" className="text-decoration-none" style={{ color: theme?.textColor }}>
+                            <Link href={NAVIGATION_URLS?.AUTH_URLS?.FORGOT_PASSWORD} className="text-decoration-none" style={{ color: theme?.textColor }}>
                                 Forgot Password?
                             </Link>
                         </div>

@@ -30,3 +30,11 @@ tbody tr td {
 .user-input input::placeholder {
     color: #424141 !important;
 }
+
+.progress-bar {
+    background-color: rgb(49, 49, 49) !important;
+}
+
+.progress {
+    background-color: #6e6b6b !important;
+}

@@ -49,8 +49,17 @@ const userSchema = new mongoose.Schema(
     managerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
-    }
-    
+    },
+    resetPasswordCode: {
+      type: String,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    },
+
 
   },
   {

@@ -26,3 +26,13 @@ export const updatePassword = async (currentPassword, newPassword) => {
 export const updateUser = async (data) => {
     return GetApiData("/user", "PUT", data, true);
 };
+
+export const sendResetCode = async (email) => {
+    return GetApiData("/auth/forgot-password/send-code", "POST", { email }, false);
+};
+export const verifyResetCode = async (email,code) => {
+    return GetApiData("/auth/forgot-password/verify-code", "POST", { email, code }, false);
+};
+export const setNewPassword = async (email, newPassword) => {
+    return GetApiData("/auth/forgot-password/set-password", "POST", { email, newPassword }, false);
+};

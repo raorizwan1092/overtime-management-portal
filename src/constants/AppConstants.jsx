@@ -54,7 +54,8 @@ export const ROLE_OPTIONS = [
 export const NAVIGATION_URLS = {
   BASE_URL: "/",
   AUTH_URLS: {
-    SIGNIN: "/signin"
+    SIGNIN: "/signin",
+    FORGOT_PASSWORD:"forgot-password"
   },
   USERS: "/users",
   TIME_LOG: "/time-log",
