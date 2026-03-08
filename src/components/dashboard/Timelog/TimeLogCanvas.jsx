@@ -13,6 +13,7 @@ import { calculateTotalAmount } from "@/utils/calculateTotalAmount";
 
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
     const { user } = useAuth();
+    console.log("user",user)
     const theme = useTheme();
     const [rule, setRule] = useState()
 
@@ -76,8 +77,6 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                                 error={errors.hours}
                                 touched={touched.hours}
                                 classNam={"mb-0"}
-                            // min={0}
-                            // max={12}
                             />
                             <TextInput
                                 label="Description (Optional)"
