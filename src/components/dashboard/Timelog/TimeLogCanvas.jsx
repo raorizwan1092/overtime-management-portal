@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
-import TextInput from "../shared/TextInput/TextInput";
-import CustomButton from "../shared/Button/Button";
+import TextInput from "../../shared/TextInput/TextInput";
+import CustomButton from "../../shared/Button/Button";
 import { Formik, Form as FormikForm } from "formik";
 import * as Yup from "yup";
-import Canvas from "../shared/Canvas";
+import Canvas from "../../shared/Canvas";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getRule } from "@/services/Rules";
@@ -76,8 +76,8 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                                 error={errors.hours}
                                 touched={touched.hours}
                                 classNam={"mb-0"}
-                                // min={0}
-                                // max={12}
+                            // min={0}
+                            // max={12}
                             />
                             <TextInput
                                 label="Description (Optional)"

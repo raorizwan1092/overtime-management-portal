@@ -1,4 +1,4 @@
-import UserTable from '@/components/dashboard/Users'
+import UserTable from '@/components/dashboard/Users/Users'
 import React from 'react'
 
 const page = () => {

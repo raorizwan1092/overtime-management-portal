@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Canvas from "../shared/Canvas";
-import axios from "axios";
 import { Button, Spinner } from "react-bootstrap";
 import { TIMELOG_STATUS } from "@/constants/AppConstants";
 import { getLogsById, updateLogStatus } from "@/services/TimeLog";
+import Canvas from "@/components/shared/Canvas";
 
 const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
 

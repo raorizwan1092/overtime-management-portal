@@ -6,13 +6,13 @@ import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
 import { useDebounce } from "use-debounce";
 import { GetAllUsers } from "@/services/Users";
-import TableCard from "../shared/TableCard";
-import AddUserCanvas from "./AddUserCanvas";
-import UserDetail from "./UserDetail";
-import CustomButton from "../shared/Button/Button";
-import SharedSpinner from "../shared/Spinner";
+import TableCard from "../../shared/TableCard";
+import CustomButton from "../../shared/Button/Button";
+import SharedSpinner from "../../shared/Spinner";
 import { USER_ROLES } from "@/constants/AppConstants";
 import { useAuth } from "@/contexts/AuthContext";
+import AddUserCanvas from "./AddUserCanvas";
+import UserDetail from "./UserDetail";
 
 const UserTable = () => {
     const { user } = useAuth()

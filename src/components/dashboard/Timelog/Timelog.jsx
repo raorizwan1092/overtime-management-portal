@@ -7,7 +7,7 @@ import axios from "axios";
 import { useTheme } from "@/contexts/ThemeContext";
 import TimeLogCanvas from "./TimeLogCanvas";
 import { addTimeLog, getTimeLog } from "@/services/TimeLog";
-import CustomButton from "../shared/Button/Button";
+import CustomButton from "../../shared/Button/Button";
 
 const Timelog = () => {
     const theme = useTheme();

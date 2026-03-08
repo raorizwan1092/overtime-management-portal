@@ -1,4 +1,4 @@
-import TimelogPage from '@/components/Timelog/Timelog'
+import TimelogPage from '@/components/dashboard/Timelog/Timelog'
 import React from 'react'
 
 const page = () => {

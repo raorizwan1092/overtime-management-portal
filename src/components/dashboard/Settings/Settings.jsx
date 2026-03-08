@@ -4,20 +4,17 @@ import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Col, Form, Row } from "react-bootstrap";
-import TextInput from "../shared/TextInput/TextInput";
-import CustomButton from "../shared/Button/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
-import TableCard from "../shared/TableCard";
-import { changePassword, updatePassword, updateUser } from "@/services/Users";
-import { useRouter } from "next/navigation";
+import { updatePassword, updateUser } from "@/services/Users";
+import CustomButton from "@/components/shared/Button/Button";
+import TableCard from "@/components/shared/TableCard";
+import TextInput from "@/components/shared/TextInput/TextInput";
 
 const Settings = () => {
     const { user, setUser } = useAuth();
-    const router = useRouter();
 
-    // --- Name & Phone Form ---
     const [isEditing, setIsEditing] = useState(false);
     const [userValues, setUserValues] = useState({
         name: "",
@@ -95,7 +92,6 @@ const Settings = () => {
 
     return (
         <>
-            {/* --- Name & Phone Settings --- */}
             <TableCard>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h4 className="text-white">Settings</h4>

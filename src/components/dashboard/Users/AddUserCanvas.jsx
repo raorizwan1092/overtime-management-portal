@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
-import Canvas from "../shared/Canvas";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Form } from "react-bootstrap";
 import { ROLE_OPTIONS, USER_ROLES } from "@/constants/AppConstants";
-import TextInput from "../shared/TextInput/TextInput";
-import SelectInput from "../shared/SelectInput/SelectInput";
-import CustomButton from "../shared/Button/Button";
 import { createUser } from "@/services/Users";
 import toast from "react-hot-toast";
+import CustomButton from "@/components/shared/Button/Button";
+import Canvas from "@/components/shared/Canvas";
+import SelectInput from "@/components/shared/SelectInput/SelectInput";
+import TextInput from "@/components/shared/TextInput/TextInput";
 
 const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
     const initialValues = {

@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Form, InputGroup } from "react-bootstrap";
-import TextInput from "../shared/TextInput/TextInput";
-import CustomButton from "../shared/Button/Button";
+import { Form } from "react-bootstrap";
+import TextInput from "../../shared/TextInput/TextInput";
+import CustomButton from "../../shared/Button/Button";
 import { getRule, updateRule } from "@/services/Rules";
 import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
-import TableCard from "../shared/TableCard";
+import TableCard from "../../shared/TableCard";
 
 const Rules = () => {
     const [initialValues, setInitialValues] = useState({
@@ -17,7 +17,7 @@ const Rules = () => {
         rate10to12: "",
     });
     const [ruleId, setRuleId] = useState(null);
-    const [isEditing, setIsEditing] = useState(false); // Controls edit mode
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         const fetchRule = async () => {

@@ -1,4 +1,4 @@
-import Rules from '@/components/dashboard/Rules'
+import Rules from '@/components/dashboard/Rules/Rules'
 import React from 'react'
 
 const page = () => {
