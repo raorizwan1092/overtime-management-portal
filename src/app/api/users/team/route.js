@@ -1,8 +1,13 @@
 import connectDB from "@/lib/dbconnection";
 import User from "@/models/User";
+import { verifyToken } from "@/utils/verifyToken";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
+    const decoded = verifyToken(req);
+    if (!decoded) {
+        return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+    }
     const { searchParams } = new URL(req.url);
     const managerId = searchParams.get("managerId");
 
