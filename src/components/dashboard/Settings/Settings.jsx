@@ -11,6 +11,7 @@ import { updatePassword, updateUser } from "@/services/Users";
 import CustomButton from "@/components/shared/Button/Button";
 import TableCard from "@/components/shared/TableCard";
 import TextInput from "@/components/shared/TextInput/TextInput";
+import { passwordValidationSchema, userValidationSchema } from "@/ValidationSchemas/SettingsSchema";
 
 const Settings = () => {
     const { user, setUser } = useAuth();
@@ -36,10 +37,7 @@ const Settings = () => {
         }
     }, [user]);
 
-    const userValidationSchema = Yup.object({
-        name: Yup.string().required("Name is required"),
-        phone: Yup.string(),
-    });
+   
 
     const handleUserSubmit = async (values, { setSubmitting }) => {
         setSubmitting(true);
@@ -62,16 +60,7 @@ const Settings = () => {
     // --- Password Form ---
     const passwordInitialValues = { currentPassword: "", newPassword: "", confirmPassword: "" };
 
-    const passwordValidationSchema = Yup.object({
-        currentPassword: Yup.string().required("Current password is required"),
-        newPassword: Yup.string()
-            .min(6, "Password must be at least 6 characters")
-            .required("New password is required"),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref("newPassword")], "Passwords must match")
-            .required("Confirm password is required"),
-    });
-
+   
     const handlePasswordSubmit = async (values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
         try {

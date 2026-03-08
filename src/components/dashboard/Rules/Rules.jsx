@@ -9,6 +9,7 @@ import { getRule, updateRule } from "@/services/Rules";
 import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
 import TableCard from "../../shared/TableCard";
+import { rulesSchema } from "@/ValidationSchemas/RulesSchema";
 
 const Rules = () => {
     const [initialValues, setInitialValues] = useState({
@@ -41,20 +42,7 @@ const Rules = () => {
         fetchRule();
     }, []);
 
-    const validationSchema = Yup.object({
-        maxHours: Yup.number()
-            .typeError("Maximum hours must be a number")
-            .required("Maximum hours is required")
-            .min(1, "Must be at least 1 hour"),
-        rate8to10: Yup.number()
-            .typeError("Rate must be a number")
-            .required("Hourly rate for 8-10 hours is required")
-            .min(0, "Rate must be positive"),
-        rate10to12: Yup.number()
-            .typeError("Rate must be a number")
-            .required("Hourly rate for 10-12 hours is required")
-            .min(0, "Rate must be positive"),
-    });
+   
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -92,7 +80,7 @@ const Rules = () => {
             <Formik
                 enableReinitialize
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={rulesSchema}
                 onSubmit={handleSubmit}
             >
                 {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (

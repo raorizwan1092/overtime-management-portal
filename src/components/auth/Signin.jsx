@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Formik } from "formik";
-import * as Yup from "yup";
+
 import { Form } from "react-bootstrap";
 import TextInput from "../shared/TextInput/TextInput";
 import CustomButton from "../shared/Button/Button";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { NAVIGATION_URLS, USER_ROLES } from "@/constants/AppConstants";
 import { useAuth } from "@/contexts/AuthContext";
+import { SigninSchema } from "@/ValidationSchemas/SigninSchema";
 
 const Signin = () => {
     const theme = useTheme()
@@ -23,10 +24,7 @@ const Signin = () => {
         password: "",
     };
 
-    const validationSchema = Yup.object({
-        email: Yup.string().email("Invalid email").required("Email is required"),
-        password: Yup.string().required("Password is required"),
-    });
+    
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -70,7 +68,7 @@ const Signin = () => {
 
             <Formik
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={SigninSchema}
                 onSubmit={handleSubmit}
             >
                 {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (

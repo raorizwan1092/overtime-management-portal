@@ -10,20 +10,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getRule } from "@/services/Rules";
 import { calculateTotalAmount } from "@/utils/calculateTotalAmount";
+import { TimeLogSchema } from "@/ValidationSchemas/TimeLogSchema";
 
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
     const { user } = useAuth();
-    console.log("user",user)
     const theme = useTheme();
     const [rule, setRule] = useState()
 
-    const TimeLogSchema = Yup.object().shape({
-        hours: Yup.number()
-            .min(0, "Hours cannot be negative")
-            .max(12, "Hours cannot exceed 12")
-            .required("Hours are required"),
-        description: Yup.string().max(255, "Description too long"),
-    });
+   
     useEffect(() => {
         const fetchRule = async () => {
             try {

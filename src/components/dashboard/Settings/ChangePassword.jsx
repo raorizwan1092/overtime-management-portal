@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { NAVIGATION_URLS, USER_ROLES } from "@/constants/AppConstants";
 import AuthenticationHeader from "../auth/AuthenticationHeader";
 import { changePassword, Logout } from "@/services/Users";
-import { RiLogoutCircleRLine } from "react-icons/ri";
+import { changePasswordSchema } from "@/ValidationSchemas/ChangePasswordSchema";
 
 const ChangePassword = () => {
     const { user, setUser } = useAuth();
@@ -24,14 +24,7 @@ const ChangePassword = () => {
         confirmPassword: "",
     };
 
-    const validationSchema = Yup.object({
-        newPassword: Yup.string()
-            .min(6, "Password must be at least 6 characters")
-            .required("New password is required"),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref("newPassword")], "Passwords must match")
-            .required("Confirm password is required"),
-    });
+    
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -83,7 +76,7 @@ const ChangePassword = () => {
 
             <Formik
                 initialValues={initialValues}
-                validationSchema={validationSchema}
+                validationSchema={changePasswordSchema}
                 onSubmit={handleSubmit}
             >
                 {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (

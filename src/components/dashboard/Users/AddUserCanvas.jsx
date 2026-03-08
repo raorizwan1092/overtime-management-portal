@@ -10,6 +10,7 @@ import CustomButton from "@/components/shared/Button/Button";
 import Canvas from "@/components/shared/Canvas";
 import SelectInput from "@/components/shared/SelectInput/SelectInput";
 import TextInput from "@/components/shared/TextInput/TextInput";
+import { userSchema } from "@/ValidationSchemas/UserSchema";
 
 const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
     const initialValues = {
@@ -22,23 +23,7 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
     };
 
 
-    const validationSchema = Yup.object({
-        name: Yup.string().required("Name is required"),
-        email: Yup.string().email("Invalid email").required("Email is required"),
-        phone: Yup.string().required("Phone number is required"),
-        role: Yup.string().required("Role is required"),
-        hourlyRate: Yup.number()
-            .typeError("Hourly rate must be a number")
-            .positive("Hourly rate must be positive")
-            .required("Hourly rate is required"),
-
-        managerId: Yup.string().when("role", {
-            is: USER_ROLES?.EMPLOYEE,
-            then: (schema) => schema.required("Manager is required"),
-            otherwise: (schema) => schema.notRequired(),
-        }),
-    });
-
+    
 
     const handleSubmit = async (values) => {
         try {
@@ -64,7 +49,7 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
             <div className="p-3">
                 <Formik
                     initialValues={initialValues}
-                    validationSchema={validationSchema}
+                    validationSchema={userSchema}
                     onSubmit={handleSubmit}
                 >
                     {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
