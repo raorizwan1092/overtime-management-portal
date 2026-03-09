@@ -11,7 +11,7 @@ const SmallScreenSidebar = ({ show, onHide }) => {
                 title="Navigation Bar"
                 placement='start'
             >
-               <DashboardSidebar/>
+               <DashboardSidebar handleClose={onHide}/>
             </Canvas>
         </>
     )

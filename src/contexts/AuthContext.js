@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { GetUserDetails } from "@/services/Users";
-import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -8,26 +7,29 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-
     const fetchUsers = async () => {
-        setLoading(true);
         try {
+            setLoading(true);
+
             const response = await GetUserDetails();
+
             if (response?.data?.user) {
-                setUser(response?.data.user);
+                setUser(response.data.user);
             }
+
+            setLoading(false);
         } catch (error) {
-            toast?.error(error ? error?.response?.data?.error : "Something went wrong")
-        } finally {
+            console.error("Failed to fetch user:", error);
             setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchUsers();
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, setUser, loading }}>
             {children}
         </AuthContext.Provider>
     );

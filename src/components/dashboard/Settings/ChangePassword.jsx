@@ -8,7 +8,7 @@ import CustomButton from "@/components/shared/Button/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { NAVIGATION_URLS, USER_ROLES } from "@/constants/AppConstants";
+import { NAVIGATION_URLS } from "@/constants/AppConstants";
 import { changePassword, Logout } from "@/services/Users";
 import { changePasswordSchema } from "@/ValidationSchemas/ChangePasswordSchema";
 import TextInput from "@/components/shared/TextInput/TextInput";
@@ -36,14 +36,7 @@ const ChangePassword = () => {
                 console.log("updatedUser", updatedUser);
                 setUser({ ...user, mustChangePassword: false });
                 resetForm();
-                if (
-                    updatedUser.role === USER_ROLES.HR ||
-                    updatedUser.role === USER_ROLES.MANAGER
-                ) {
-                    router.push(NAVIGATION_URLS.USERS);
-                } else {
-                    router.push(NAVIGATION_URLS.TIME_LOG);
-                }
+                router.push(NAVIGATION_URLS.AUTH_URLS?.SIGNIN);
 
             }
         } catch (error) {
