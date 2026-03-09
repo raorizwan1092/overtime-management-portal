@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Spinner, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { TIMELOG_STATUS } from "@/constants/AppConstants";
 import { getLogsById, updateLogStatus, getUserTeam } from "@/services/TimeLog"; // we'll add getUserTeam
 import Canvas from "@/components/shared/Canvas";
+import SharedSpinner from "@/components/shared/Spinner";
 
 const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
     const [logs, setLogs] = useState([]);
@@ -14,7 +15,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
     useEffect(() => {
         if (showCanvas && selectedUser?._id) {
             fetchLogs();
-            if (selectedUser.role === "MANAGER") fetchTeam(); // Only fetch team for managers
+            if (selectedUser.role === "MANAGER") fetchTeam();
         }
     }, [showCanvas, selectedUser]);
 
@@ -58,7 +59,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
             show={showCanvas}
             onHide={() => setShowCanvas(false)}
             title="User Details"
-            width={600}
+            width={800}
         >
             <div className="p-3">
 
@@ -75,10 +76,12 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
 
                 <hr />
 
-                {/* Timelogs Section */}
                 <h6 className="fw-bold mb-3">Time Logs</h6>
                 {loading ? (
-                    <Spinner animation="border" />
+                    <div className="pb-5">
+                        <SharedSpinner />
+                    </div>
+
                 ) : logs.length === 0 ? (
                     <p>No timelogs found</p>
                 ) : (
@@ -92,8 +95,8 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
                                 <strong>Status:</strong>{" "}
                                 <span className={
                                     log.status === TIMELOG_STATUS.APPROVED ? "text-success"
-                                    : log.status === TIMELOG_STATUS.REJECTED ? "text-danger"
-                                    : "text-warning"
+                                        : log.status === TIMELOG_STATUS.REJECTED ? "text-danger"
+                                            : "text-warning"
                                 }>
                                     {log.status}
                                 </span>
@@ -109,17 +112,18 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
                     ))
                 )}
 
-                {/* Team Section */}
                 {selectedUser.role === "MANAGER" && (
                     <>
                         <hr />
                         <h6 className="fw-bold mb-3">Team Members</h6>
                         {teamLoading ? (
-                            <Spinner animation="border" />
+                            <div className="pb-5">
+                                <SharedSpinner />
+                            </div>
                         ) : team.length === 0 ? (
                             <p>No team members found</p>
                         ) : (
-                            <Table striped bordered hover size="sm">
+                            <Table striped bordered hover size="sm" responsive>
                                 <thead>
                                     <tr>
                                         <th>#</th>

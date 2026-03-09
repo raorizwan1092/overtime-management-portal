@@ -8,6 +8,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import TimeLogCanvas from "./TimeLogCanvas";
 import { addTimeLog, getTimeLog } from "@/services/TimeLog";
 import CustomButton from "../../shared/Button/Button";
+import SharedSpinner from "@/components/shared/Spinner";
 
 const Timelog = () => {
     const theme = useTheme();
@@ -111,9 +112,7 @@ const Timelog = () => {
             </Row>
 
             {loading ? (
-                <div className="text-center py-5">
-                    <Spinner animation="border" style={{ color: theme.textColor }} />
-                </div>
+                <SharedSpinner/>
             ) : (
                 <Row className="g-2 mt-2 d-flex justify-content-center">
                     {getDaysInMonth().map((date, index) => {
