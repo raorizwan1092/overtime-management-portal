@@ -2,19 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import { Col, Form, Row } from "react-bootstrap";
 import { useAuth } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
 import { FiEdit } from "react-icons/fi";
-import { updatePassword, updateUser } from "@/services/Users";
+import { updatePassword, updateUser, GetUserDetails } from "@/services/Users";
 import CustomButton from "@/components/shared/Button/Button";
 import TableCard from "@/components/shared/TableCard";
 import TextInput from "@/components/shared/TextInput/TextInput";
-import { passwordValidationSchema, userValidationSchema } from "@/ValidationSchemas/SettingsSchema";
+import {
+    passwordValidationSchema,
+    userValidationSchema,
+} from "@/ValidationSchemas/SettingsSchema";
 
 const Settings = () => {
-    const { user, setUser } = useAuth();
+    const { setUser } = useAuth();
 
     const [isEditing, setIsEditing] = useState(false);
     const [userValues, setUserValues] = useState({
@@ -25,58 +27,93 @@ const Settings = () => {
         hourlyRate: "",
     });
 
-    useEffect(() => {
-        if (user) {
-            setUserValues({
-                name: user.name || "",
-                email: user.email || "",
-                phone: user.phone || "",
-                role: user.role || "",
-                hourlyRate: user.hourlyRate || "",
-            });
-        }
-    }, [user]);
+    // ✅ Fetch user details here instead of AuthContext
+    const fetchUserDetails = async () => {
+        try {
+            const response = await GetUserDetails();
 
-   
+            if (response?.data?.user) {
+                const user = response.data.user;
+
+                setUserValues({
+                    name: user.name || "",
+                    email: user.email || "",
+                    phone: user.phone || "",
+                    role: user.role || "",
+                    hourlyRate: user.hourlyRate || "",
+                });
+
+                setUser(user); // keep context updated
+            }
+        } catch (error) {
+            toast.error("Failed to load user details");
+        }
+    };
+
+    useEffect(() => {
+        fetchUserDetails();
+    }, []);
 
     const handleUserSubmit = async (values, { setSubmitting }) => {
         setSubmitting(true);
+
         try {
-            const response = await updateUser({ name: values.name, phone: values.phone });
+            const response = await updateUser({
+                name: values.name,
+                phone: values.phone,
+            });
+
             if (response?.data.success) {
                 toast.success("Settings updated successfully");
+
                 setUser(response?.data.user);
+
+                setUserValues((prev) => ({
+                    ...prev,
+                    name: response.data.user.name,
+                    phone: response.data.user.phone,
+                }));
+
                 setIsEditing(false);
             } else {
                 toast.error(response?.data?.error || "Failed to update settings");
             }
         } catch (err) {
             toast.error("Something went wrong");
-        } finally {
-            setSubmitting(false);
         }
+
+        setSubmitting(false);
     };
 
-    // --- Password Form ---
-    const passwordInitialValues = { currentPassword: "", newPassword: "", confirmPassword: "" };
+    const passwordInitialValues = {
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    };
 
-   
-    const handlePasswordSubmit = async (values, { setSubmitting, resetForm }) => {
+    const handlePasswordSubmit = async (
+        values,
+        { setSubmitting, resetForm }
+    ) => {
         setSubmitting(true);
+
         try {
-            const response = await updatePassword(values.currentPassword, values.newPassword);
+            const response = await updatePassword(
+                values.currentPassword,
+                values.newPassword
+            );
+
             if (response?.data.success) {
                 toast.success("Password changed successfully");
-                setUser({ ...user, mustChangePassword: false });
                 resetForm();
             } else {
                 toast.error(response?.data?.error || "Failed to change password");
             }
         } catch (err) {
             toast.error(err?.response?.data?.error || "Failed to change password");
-        } finally {
-            setSubmitting(false);
         }
+
+        setSubmitting(false);
     };
 
     return (
@@ -84,11 +121,11 @@ const Settings = () => {
             <TableCard>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h4 className="text-white">Settings</h4>
+
                     <FiEdit
                         size={22}
                         className="cursor-pointer text-white"
                         onClick={() => setIsEditing(!isEditing)}
-                        title={isEditing ? "Cancel Editing" : "Edit Settings"}
                     />
                 </div>
 
@@ -98,14 +135,20 @@ const Settings = () => {
                     validationSchema={userValidationSchema}
                     onSubmit={handleUserSubmit}
                 >
-                    {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
+                    {({
+                        handleSubmit,
+                        handleChange,
+                        values,
+                        errors,
+                        touched,
+                        isSubmitting,
+                    }) => (
                         <Form onSubmit={handleSubmit}>
                             <Row>
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="Name"
                                         name="name"
-                                        type="text"
                                         value={values.name}
                                         onChange={handleChange}
                                         error={errors.name}
@@ -113,23 +156,20 @@ const Settings = () => {
                                         disabled={!isEditing}
                                     />
                                 </Col>
+
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="Email"
                                         name="email"
-                                        type="email"
                                         value={values.email}
-                                        onChange={handleChange}
-                                        error={errors.email}
-                                        touched={touched.email}
                                         disabled
                                     />
                                 </Col>
+
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="Phone"
                                         name="phone"
-                                        type="text"
                                         value={values.phone}
                                         onChange={handleChange}
                                         error={errors.phone}
@@ -137,27 +177,21 @@ const Settings = () => {
                                         disabled={!isEditing}
                                     />
                                 </Col>
+
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="Role"
                                         name="role"
-                                        type="text"
                                         value={values.role}
-                                        onChange={handleChange}
-                                        error={errors.role}
-                                        touched={touched.role}
                                         disabled
                                     />
                                 </Col>
+
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="Hourly Rate"
                                         name="hourlyRate"
-                                        type="number"
                                         value={values.hourlyRate}
-                                        onChange={handleChange}
-                                        error={errors.hourlyRate}
-                                        touched={touched.hourlyRate}
                                         disabled
                                     />
                                 </Col>
@@ -176,16 +210,22 @@ const Settings = () => {
                 </Formik>
             </TableCard>
 
-            {/* --- Change Password --- */}
             <TableCard className="mt-4">
                 <h4 className="text-white mb-3">Change Password</h4>
+
                 <Formik
-                    enableReinitialize
                     initialValues={passwordInitialValues}
                     validationSchema={passwordValidationSchema}
                     onSubmit={handlePasswordSubmit}
                 >
-                    {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
+                    {({
+                        handleSubmit,
+                        handleChange,
+                        values,
+                        errors,
+                        touched,
+                        isSubmitting,
+                    }) => (
                         <Form onSubmit={handleSubmit}>
                             <Row>
                                 <Col xs={12} md={6}>
@@ -199,6 +239,7 @@ const Settings = () => {
                                         touched={touched.currentPassword}
                                     />
                                 </Col>
+
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="New Password"
@@ -210,6 +251,7 @@ const Settings = () => {
                                         touched={touched.newPassword}
                                     />
                                 </Col>
+
                                 <Col xs={12} md={6}>
                                     <TextInput
                                         label="Confirm Password"
