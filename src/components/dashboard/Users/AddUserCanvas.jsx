@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import { Form } from "react-bootstrap";
 import { ROLE_OPTIONS, USER_ROLES } from "@/constants/AppConstants";
 import { createUser } from "@/services/Users";
@@ -12,30 +11,50 @@ import SelectInput from "@/components/shared/SelectInput/SelectInput";
 import TextInput from "@/components/shared/TextInput/TextInput";
 import { userSchema } from "@/ValidationSchemas/UserSchema";
 
-const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
+const AddUserCanvas = ({
+    showCanvas,
+    setShowCanvas,
+    fetchUsers,
+    managers = [],
+    hideRole = false,
+    managerId = null,
+}) => {
     const initialValues = {
         name: "",
         email: "",
         phone: "",
-        role: "",
+        role: managerId ? USER_ROLES.EMPLOYEE : "",
         hourlyRate: "",
-        managerId: "",
+        managerId: managerId || "",
     };
 
-
-    
-
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, actions) => {
         try {
-            const response = await createUser(values);
+            let payload = { ...values };
 
-            if (response?.data.success) {
+            if (managerId) {
+                payload = {
+                    ...payload,
+                    role: USER_ROLES.EMPLOYEE,
+                    managerId: managerId,
+                };
+            }
+
+            const response = await createUser(payload);
+
+            if (response?.data?.success) {
                 toast.success("User Created Successfully");
+
+                actions.resetForm();
                 setShowCanvas(false);
-                fetchUsers();
+
+                if (fetchUsers) fetchUsers();
             }
         } catch (err) {
+            console.error(err);
             toast.error(err?.response?.data?.error || "Something went wrong");
+        } finally {
+            actions.setSubmitting(false);
         }
     };
 
@@ -48,11 +67,19 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
         >
             <div className="p-3">
                 <Formik
+                    enableReinitialize
                     initialValues={initialValues}
                     validationSchema={userSchema}
                     onSubmit={handleSubmit}
                 >
-                    {({ handleSubmit, handleChange, values, errors, touched, isSubmitting }) => (
+                    {({
+                        handleSubmit,
+                        handleChange,
+                        values,
+                        errors,
+                        touched,
+                        isSubmitting,
+                    }) => (
                         <Form onSubmit={handleSubmit}>
                             <TextInput
                                 label="Name"
@@ -92,29 +119,21 @@ const AddUserCanvas = ({ showCanvas, setShowCanvas, fetchUsers, managers }) => {
                                 touched={touched.hourlyRate}
                             />
 
-                            <SelectInput
-                                label="Role"
-                                name="role"
-                                value={values.role}
-                                onChange={handleChange}
-                                options={ROLE_OPTIONS}
-                                error={errors.role}
-                                touched={touched.role}
-                            />
-                            {values.role === USER_ROLES?.EMPLOYEE && (
+                            {/* Show role only when HR creates user */}
+                            {!hideRole && (
                                 <SelectInput
-                                    label="Manager"
-                                    name="managerId"
-                                    value={values.managerId}
+                                    label="Role"
+                                    name="role"
+                                    value={values.role}
                                     onChange={handleChange}
-                                    options={managers.map((m) => ({
-                                        label: m.name,
-                                        value: m._id,
-                                    }))}
-                                    error={errors.managerId}
-                                    touched={touched.managerId}
+                                    options={ROLE_OPTIONS.filter(
+                                        (role) => role.value !== USER_ROLES.EMPLOYEE
+                                    )}
+                                    error={errors.role}
+                                    touched={touched.role}
                                 />
                             )}
+
                             <CustomButton
                                 type="submit"
                                 label="Add User"

@@ -48,8 +48,8 @@ export const navLinks = [
 
 export const ROLE_OPTIONS = [
   { label: "Manager", value: USER_ROLES.MANAGER },
-  { label: "Employee", value: USER_ROLES.EMPLOYEE },
   { label: "HR", value: USER_ROLES.HR },
+  { label: "Employee", value: USER_ROLES.EMPLOYEE },
 ];
 export const NAVIGATION_URLS = {
   BASE_URL: "/",
