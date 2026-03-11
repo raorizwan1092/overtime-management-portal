@@ -71,7 +71,17 @@ export async function GET(req) {
       .select("-password")
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
+
+    if (decoded.role === USER_ROLES.HR) {
+      for (let user of users) {
+        if (user.role === USER_ROLES.MANAGER) {
+          const teamCount = await User.countDocuments({ managerId: user._id });
+          user.teamCount = teamCount;
+        }
+      }
+    }
 
     const totalUsers = await User.countDocuments(finalQuery);
 

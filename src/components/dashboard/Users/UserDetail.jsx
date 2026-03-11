@@ -2,19 +2,21 @@
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { TIMELOG_STATUS } from "@/constants/AppConstants";
-import { getLogsById, updateLogStatus, getUserTeam } from "@/services/TimeLog"; // we'll add getUserTeam
+import { getLogsById, updateLogStatus, getUserTeam } from "@/services/TimeLog";
 import Canvas from "@/components/shared/Canvas";
 import SharedSpinner from "@/components/shared/Spinner";
 import CustomButton from "@/components/shared/Button/Button";
 import AddUserCanvas from "./AddUserCanvas";
-
-const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import DeleteUserCanvas from "./DeleteUserCanvas";
+const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
     const [team, setTeam] = useState([]);
     const [teamLoading, setTeamLoading] = useState(false);
     const [showAddCanvas, setShowAddCanvas] = useState(false);
-
+    const [showDeleteCanvas, setShowDeleteCanvas] = useState(false);
+    const [selectedMember, setSelectedMember] = useState(null);
     useEffect(() => {
         if (showCanvas && selectedUser?._id) {
             fetchLogs();
@@ -54,6 +56,10 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
         } catch (err) {
             console.error(err);
         }
+    };
+    const handleViewDeleteUser = (user) => {
+        setSelectedMember(user);
+        setShowDeleteCanvas(true);
     };
 
     if (!selectedUser) return null;
@@ -149,6 +155,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -158,6 +165,15 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
                                                 <td>{member.name}</td>
                                                 <td>{member.email}</td>
                                                 <td>{member.phone || "-"}</td>
+                                                <td>
+                                                    <RiDeleteBin6Fill
+                                                        size={18}
+                                                        style={{ cursor: "pointer" }}
+                                                        title="View User"
+                                                        className="mx-2 text-danger"
+                                                        onClick={() => handleViewDeleteUser(member)}
+                                                    />
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -173,6 +189,13 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser }) => {
                 fetchUsers={fetchTeam}
                 hideRole={true}
                 managerId={selectedUser._id}
+            />
+            <DeleteUserCanvas
+                showCanvas={showDeleteCanvas}
+                setShowCanvas={setShowDeleteCanvas}
+                selectedUser={selectedMember}
+                fetchUsers={fetchTeam}
+                fetchUserTable={fetchUsers}
             />
         </>
     );

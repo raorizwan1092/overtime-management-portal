@@ -21,12 +21,17 @@ const CustomButton = ({
             disabled={disabled || loading}
             variant={variant}
             className={`${className} ${fullWidth ? "w-100" : ""} d-flex align-items-center justify-content-center`}
-            style={{
-                backgroundColor: theme.btnBackground,
-                border: theme.border,
-                color: theme.btnText,
-            }}
+            style={
+                variant === "primary"
+                    ? {
+                        backgroundColor: theme.btnBackground,
+                        border: theme.border,
+                        color: theme.btnText,
+                    }
+                    : undefined
+            }
         >
+
             {loading ? (
                 <AiOutlineLoading3Quarters
                     className="spin"

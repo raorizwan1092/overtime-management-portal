@@ -13,6 +13,8 @@ import { USER_ROLES } from "@/constants/AppConstants";
 import { useAuth } from "@/contexts/AuthContext";
 import AddUserCanvas from "./AddUserCanvas";
 import UserDetail from "./UserDetail";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import DeleteUserCanvas from "./DeleteUserCanvas";
 
 const UserTable = () => {
     const { user } = useAuth()
@@ -24,6 +26,7 @@ const UserTable = () => {
     const [debouncedSearch] = useDebounce(searchTerm, 500);
     const [showAddCanvas, setShowAddCanvas] = useState(false);
     const [showDetailCanvas, setShowDetailCanvas] = useState(false);
+    const [showDeleteCanvas, setShowDeleteCanvas] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const fetchUsers = useCallback(async (pageNumber = 1, search = "") => {
@@ -53,6 +56,10 @@ const UserTable = () => {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+    };
+    const handleViewDeleteUser = (user) => {
+        setSelectedUser(user);
+        setShowDeleteCanvas(true);
     };
 
     useEffect(() => {
@@ -132,6 +139,22 @@ const UserTable = () => {
                                                     title="View User"
                                                     onClick={() => handleViewUser(user)}
                                                 />
+                                                <RiDeleteBin6Fill
+                                                    size={18}
+                                                    style={{
+                                                        cursor: user.teamCount > 0 ? "not-allowed" : "pointer",
+                                                        opacity: user.teamCount > 0 ? 0.7 : 1
+                                                    }}
+                                                    title={
+                                                        user.teamCount > 0
+                                                            ? "Cannot delete manager with team members"
+                                                            : "Delete User"
+                                                    }
+                                                    className="mx-2 text-danger"
+                                                    onClick={() => {
+                                                        if (user.teamCount === 0) handleViewDeleteUser(user);
+                                                    }}
+                                                />
                                             </td>
                                         </tr>
                                     ))
@@ -177,6 +200,13 @@ const UserTable = () => {
                 showCanvas={showDetailCanvas}
                 setShowCanvas={setShowDetailCanvas}
                 selectedUser={selectedUser}
+                fetchUsers={fetchUsers}
+            />
+            <DeleteUserCanvas
+                showCanvas={showDeleteCanvas}
+                setShowCanvas={setShowDeleteCanvas}
+                selectedUser={selectedUser}
+                fetchUsers={fetchUsers}
             />
         </div>
     );
