@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
-import { TIMELOG_STATUS } from "@/constants/AppConstants";
+import { Button, Col, Row, Table } from "react-bootstrap";
+import { TIMELOG_STATUS, USER_ROLES } from "@/constants/AppConstants";
 import { getLogsById, updateLogStatus, getUserTeam } from "@/services/TimeLog";
 import Canvas from "@/components/shared/Canvas";
 import SharedSpinner from "@/components/shared/Spinner";
@@ -85,45 +85,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                         <p className="mb-0">{selectedUser?.email}</p>
                     </div>
 
-                    <hr />
-
-                    <h6 className="fw-bold mb-3">Time Logs</h6>
-                    {loading ? (
-                        <div className="pb-5">
-                            <SharedSpinner />
-                        </div>
-
-                    ) : logs.length === 0 ? (
-                        <p>No timelogs found</p>
-                    ) : (
-                        logs.map(log => (
-                            <div key={log._id} className="border p-2 mb-2 rounded">
-                                <div><strong>Date:</strong> {new Date(log.date).toLocaleDateString()}</div>
-                                <div><strong>Hours:</strong> {log.hours}</div>
-                                <div><strong>Description:</strong> {log.description}</div>
-                                <div><strong>Amount:</strong> {log.totalAmount}</div>
-                                <div className="mb-2">
-                                    <strong>Status:</strong>{" "}
-                                    <span className={
-                                        log.status === TIMELOG_STATUS.APPROVED ? "text-success"
-                                            : log.status === TIMELOG_STATUS.REJECTED ? "text-danger"
-                                                : "text-warning"
-                                    }>
-                                        {log.status}
-                                    </span>
-                                </div>
-
-                                {log.status === TIMELOG_STATUS.PENDING && (
-                                    <div className="d-flex gap-2">
-                                        <Button size="sm" variant="success" onClick={() => handleStatusChange(log._id, TIMELOG_STATUS.APPROVED)}>Approve</Button>
-                                        <Button size="sm" variant="danger" onClick={() => handleStatusChange(log._id, TIMELOG_STATUS.REJECTED)}>Reject</Button>
-                                    </div>
-                                )}
-                            </div>
-                        ))
-                    )}
-
-                    {selectedUser.role === "MANAGER" && (
+                    {selectedUser.role === USER_ROLES.MANAGER && (
                         <>
                             <hr />
                             <div className="d-flex justify-content-between">
@@ -181,6 +143,64 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                             )}
                         </>
                     )}
+
+                    <hr />
+
+                    <h6 className="fw-bold mb-3">Time Logs</h6>
+                    {loading ? (
+                        <div className="pb-5">
+                            <SharedSpinner />
+                        </div>
+
+                    ) : logs.length === 0 ? (
+                        <p>No timelogs found</p>
+                    ) : (
+                        logs.map(log => (
+                            <div key={log._id} className="border p-2 mb-2 rounded">
+                                <div><strong>Date:</strong> {new Date(log.date).toLocaleDateString()}</div>
+                                <div><strong>Hours:</strong> {log.hours}</div>
+                                <div><strong>Description:</strong> {log.description}</div>
+                                <div><strong>Amount:</strong> {log.totalAmount}</div>
+                                <div className="mb-2">
+                                    <strong>Status:</strong>{" "}
+                                    <span className={
+                                        log.status === TIMELOG_STATUS.APPROVED ? "text-success"
+                                            : log.status === TIMELOG_STATUS.REJECTED ? "text-danger"
+                                                : "text-warning"
+                                    }>
+                                        {log.status}
+                                    </span>
+                                </div>
+
+                                {log.status === TIMELOG_STATUS.PENDING && (
+
+
+                                    <Row className="mt-2">
+                                        <Col xs={12} lg={6}>
+                                            <CustomButton
+                                                variant="success"
+                                                onClick={() => handleStatusChange(log._id, TIMELOG_STATUS.APPROVED)}
+                                                label={"Approve"}
+                                                fullWidth
+                                                className="mb-1"
+                                            />
+                                        </Col>
+                                        <Col xs={12} lg={6}>
+                                            <CustomButton
+                                                variant="danger"
+                                                onClick={() => handleStatusChange(log._id, TIMELOG_STATUS.REJECTED)}
+                                                loading={loading}
+                                                label={"Reject"}
+                                                fullWidth
+                                                className="mb-1"
+                                            />
+                                        </Col>
+                                    </Row>
+                                )}
+                            </div>
+                        ))
+                    )}
+
                 </div>
             </Canvas>
             <AddUserCanvas

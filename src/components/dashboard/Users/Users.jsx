@@ -111,6 +111,7 @@ const UserTable = () => {
                                     <th style={{ width: "25%" }}>Name</th>
                                     <th style={{ width: "30%" }}>Email</th>
                                     <th style={{ width: "15%" }}>Phone</th>
+                                    <th style={{ width: "10%" }}>Role</th>
                                     <th style={{ width: "10%" }}>Actions</th>
                                 </tr>
                             </thead>
@@ -132,6 +133,7 @@ const UserTable = () => {
                                             <td>{user?.name || "-"}</td>
                                             <td>{user?.email}</td>
                                             <td>{user?.phone}</td>
+                                            <td>{user?.role}</td>
                                             <td>
                                                 <FiEye
                                                     size={18}
@@ -152,7 +154,9 @@ const UserTable = () => {
                                                     }
                                                     className="mx-2 text-danger"
                                                     onClick={() => {
-                                                        if (user.teamCount === 0) handleViewDeleteUser(user);
+                                                        if (user.role !== USER_ROLES?.MANAGER || user.teamCount === 0) {
+                                                            handleViewDeleteUser(user);
+                                                        }
                                                     }}
                                                 />
                                             </td>
