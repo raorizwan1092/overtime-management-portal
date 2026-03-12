@@ -1,9 +1,17 @@
 import { GetApiData } from "@/utils/http-client";
 
-export const GetAllUsers = function (page = 1, search = "") {
-    const query = search ? `&search=${encodeURIComponent(search)}` : "";
-    return GetApiData(`/users?page=${page}${query}`, "GET", null, true);
+export const GetAllUsers = function (page = 1, search = "", filter = "") {
+    const query = [
+        page ? `page=${page}` : "",
+        search ? `search=${encodeURIComponent(search)}` : "",
+        filter ? `filter=${filter}` : "",
+    ]
+        .filter(Boolean)
+        .join("&");
+
+    return GetApiData(`/users?${query}`, "GET", null, true);
 };
+
 
 export const createUser = function (data) {
     return GetApiData(`/users`, 'POST', data, true);
@@ -27,6 +35,13 @@ export const changePassword = async (newPassword) => {
 export const updatePassword = async (currentPassword, newPassword) => {
     return GetApiData("/update-password", "POST", { currentPassword, newPassword }, true);
 };
+export const unassignTeamMember = async (id) => {
+    return GetApiData(`/users/unassign-manager/${id}`, "PATCH", null, true);
+};
+export const assignManager = async (id, managerId) => {
+    return GetApiData(`/users/assign-manager/${id}`, "PATCH", { managerId }, true);
+};
+
 export const updateUser = async (data) => {
     return GetApiData("/user", "PUT", data, true);
 };
@@ -34,7 +49,7 @@ export const updateUser = async (data) => {
 export const sendResetCode = async (email) => {
     return GetApiData("/auth/forgot-password/send-code", "POST", { email }, false);
 };
-export const verifyResetCode = async (email,code) => {
+export const verifyResetCode = async (email, code) => {
     return GetApiData("/auth/forgot-password/verify-code", "POST", { email, code }, false);
 };
 export const setNewPassword = async (email, newPassword) => {

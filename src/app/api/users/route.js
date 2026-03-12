@@ -12,21 +12,12 @@ export async function GET(req) {
   const decoded = verifyToken(req);
 
   if (!decoded) {
-    return NextResponse.json(
-      { success: false, error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-  if (
-    decoded.role !== USER_ROLES.HR &&
-    decoded.role !== USER_ROLES.MANAGER
-  ) {
-    return NextResponse.json(
-      { success: false, error: "Forbidden: Access denied" },
-      { status: 403 }
-    );
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
 
+  if (decoded.role !== USER_ROLES.HR && decoded.role !== USER_ROLES.MANAGER) {
+    return NextResponse.json({ success: false, error: "Forbidden: Access denied" }, { status: 403 });
+  }
 
   try {
     await connectDB();
@@ -35,17 +26,26 @@ export async function GET(req) {
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = parseInt(searchParams.get("limit")) || LIMIT;
     const search = searchParams.get("search") || "";
+    const filter = searchParams.get("filter") || ""; // new filter param
     const skip = (page - 1) * limit;
 
     let baseQuery = {};
 
     if (decoded.role === USER_ROLES.HR) {
+      // Default: only HR + Managers
       baseQuery = {
         role: { $in: [USER_ROLES.HR, USER_ROLES.MANAGER] },
-        _id: { $ne: decoded.userId }
+        _id: { $ne: decoded.userId },
       };
-    }
 
+      // Apply filter if set
+      if (filter === "unassigned") {
+        baseQuery.role = USER_ROLES.EMPLOYEE;   // Only employees
+        baseQuery.managerId = { $exists: false };
+      } else if (filter === "all") {
+        baseQuery.role = { $in: [USER_ROLES.HR, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE] };
+      }
+    }
 
     if (decoded.role === USER_ROLES.MANAGER) {
       baseQuery = {
@@ -63,10 +63,7 @@ export async function GET(req) {
       }
       : {};
 
-    const finalQuery = {
-      ...baseQuery,
-      ...searchQuery,
-    };
+    const finalQuery = { ...baseQuery, ...searchQuery };
 
     const users = await User.find(finalQuery)
       .select("-password")
@@ -96,16 +93,12 @@ export async function GET(req) {
         limit,
       },
     });
-
   } catch (error) {
     console.error("Error fetching users:", error);
-
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch users" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: "Failed to fetch users" }, { status: 500 });
   }
 }
+
 
 
 export async function POST(req) {

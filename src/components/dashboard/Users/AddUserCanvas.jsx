@@ -119,7 +119,6 @@ const AddUserCanvas = ({
                                 touched={touched.hourlyRate}
                             />
 
-                            {/* Show role only when HR creates user */}
                             {!hideRole && (
                                 <SelectInput
                                     label="Role"

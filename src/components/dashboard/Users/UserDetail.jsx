@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import {  Col, Row, Table } from "react-bootstrap";
 import { TIMELOG_STATUS, USER_ROLES } from "@/constants/AppConstants";
 import { getLogsById, updateLogStatus, getUserTeam } from "@/services/TimeLog";
 import Canvas from "@/components/shared/Canvas";
@@ -10,6 +10,10 @@ import AddUserCanvas from "./AddUserCanvas";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import DeleteUserCanvas from "./DeleteUserCanvas";
 import { FiEye } from "react-icons/fi";
+import { unassignTeamMember } from "@/services/Users";
+import toast from "react-hot-toast";
+import { IoPersonRemoveOutline } from "react-icons/io5";
+
 const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -19,6 +23,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
     const [showDeleteCanvas, setShowDeleteCanvas] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
     const [logUser, setLogUser] = useState(null);
+    const [unAssignLoading, setUnAssignLoading] = useState(false);
     useEffect(() => {
         if (showCanvas && selectedUser?._id) {
             setLogUser(selectedUser);
@@ -70,6 +75,29 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
     const handleViewUser = (user) => {
         setLogUser(user);
         fetchLogs(user._id);
+    };
+
+
+
+    const handleUnassign = async (user) => {
+        if (!user?._id) return;
+
+        try {
+            setUnAssignLoading(true);
+
+            await unassignTeamMember(user._id);
+
+            toast.success("Employee unassigned from manager");
+
+            fetchTeam();
+            fetchUsers();
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to unassign employee");
+        } finally {
+            setUnAssignLoading(false);
+        }
     };
 
 
@@ -139,7 +167,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                                                 <td>{member.name}</td>
                                                 <td>{member.email}</td>
                                                 <td>{member.phone || "-"}</td>
-                                                <td>
+                                                <td className="d-flex gap-2 align-items-center">
                                                     <FiEye
                                                         size={18}
                                                         style={{ cursor: "pointer" }}
@@ -153,6 +181,14 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                                                         title="View User"
                                                         className="mx-2 text-danger"
                                                         onClick={() => handleViewDeleteUser(member)}
+                                                    />
+                                                    <CustomButton
+                                                        label={<IoPersonRemoveOutline size={14} />}
+                                                        onClick={() => handleUnassign(member)}
+                                                        loading={unAssignLoading}
+                                                        variant="link"
+                                                        className="text-white px-0"
+
                                                     />
                                                 </td>
                                             </tr>
@@ -187,7 +223,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                         <Row>
                             {logs.map((log) => (
                                 <Col xs={12} lg={6} key={log._id}>
-                                    <div className="border p-2 my-2 rounded" style={{height:"100%"}}>
+                                    <div className="border p-2 my-2 rounded" style={{ height: "100%" }}>
                                         <div><strong>Date:</strong> {new Date(log.date).toLocaleDateString()}</div>
                                         <div><strong>Hours:</strong> {log.hours}</div>
                                         <div><strong>Description:</strong> {log.description}</div>
