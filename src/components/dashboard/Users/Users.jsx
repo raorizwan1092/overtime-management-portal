@@ -162,26 +162,27 @@ const UserTable = () => {
                                                         title="View User"
                                                         onClick={() => handleViewUser(user)}
                                                     />
-                                                    <RiDeleteBin6Fill
-                                                        size={18}
-                                                        style={{
-                                                            cursor: user.teamCount > 0 ? "not-allowed" : "pointer",
-                                                            opacity: user.teamCount > 0 ? 0.7 : 1,
-                                                        }}
-                                                        title={
-                                                            user.teamCount > 0
-                                                                ? "Cannot delete manager with team members"
-                                                                : "Delete User"
-                                                        }
-                                                        className="mx-2 text-danger"
-                                                        onClick={() => {
-                                                            if (user.role !== USER_ROLES?.MANAGER || user.teamCount === 0) {
-                                                                handleViewDeleteUser(user);
-                                                            }
-                                                        }}
-                                                    />
+
                                                 </>
                                             )}
+                                            <RiDeleteBin6Fill
+                                                size={18}
+                                                style={{
+                                                    cursor: user.teamCount > 0 ? "not-allowed" : "pointer",
+                                                    opacity: user.teamCount > 0 ? 0.7 : 1,
+                                                }}
+                                                title={
+                                                    user.teamCount > 0
+                                                        ? "Cannot delete manager with team members"
+                                                        : "Delete User"
+                                                }
+                                                className="mx-2 text-danger"
+                                                onClick={() => {
+                                                    if (user.role !== USER_ROLES?.MANAGER || user.teamCount === 0) {
+                                                        handleViewDeleteUser(user);
+                                                    }
+                                                }}
+                                            />
                                         </td>
                                     </tr>
                                 ))
