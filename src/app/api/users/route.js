@@ -41,10 +41,11 @@ export async function GET(req) {
 
     if (decoded.role === USER_ROLES.HR) {
       baseQuery = {
-        role: USER_ROLES.MANAGER,
-        createdBy: decoded.id,
+        role: { $in: [USER_ROLES.HR, USER_ROLES.MANAGER] },
+        _id: { $ne: decoded.userId }
       };
     }
+
 
     if (decoded.role === USER_ROLES.MANAGER) {
       baseQuery = {

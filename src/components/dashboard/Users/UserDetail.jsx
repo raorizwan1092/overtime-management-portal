@@ -9,6 +9,7 @@ import CustomButton from "@/components/shared/Button/Button";
 import AddUserCanvas from "./AddUserCanvas";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import DeleteUserCanvas from "./DeleteUserCanvas";
+import { FiEye } from "react-icons/fi";
 const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => {
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -17,17 +18,21 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
     const [showAddCanvas, setShowAddCanvas] = useState(false);
     const [showDeleteCanvas, setShowDeleteCanvas] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
+    const [logUser, setLogUser] = useState(null);
     useEffect(() => {
         if (showCanvas && selectedUser?._id) {
-            fetchLogs();
+            setLogUser(selectedUser);
+            fetchLogs(selectedUser._id);
+
             if (selectedUser.role === "MANAGER") fetchTeam();
         }
     }, [showCanvas, selectedUser]);
 
-    const fetchLogs = async () => {
+
+    const fetchLogs = async (userId) => {
         try {
             setLoading(true);
-            const res = await getLogsById(selectedUser?._id);
+            const res = await getLogsById(userId);
             setLogs(res.data.data || []);
         } catch (err) {
             console.error(err);
@@ -35,6 +40,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
             setLoading(false);
         }
     };
+
 
     const fetchTeam = async () => {
         try {
@@ -61,6 +67,12 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
         setSelectedMember(user);
         setShowDeleteCanvas(true);
     };
+    const handleViewUser = (user) => {
+        setLogUser(user);
+        fetchLogs(user._id);
+    };
+
+
 
     if (!selectedUser) return null;
 
@@ -128,6 +140,13 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                                                 <td>{member.email}</td>
                                                 <td>{member.phone || "-"}</td>
                                                 <td>
+                                                    <FiEye
+                                                        size={18}
+                                                        style={{ cursor: "pointer" }}
+                                                        title="View User"
+                                                        onClick={() => handleViewUser(member)}
+
+                                                    />
                                                     <RiDeleteBin6Fill
                                                         size={18}
                                                         style={{ cursor: "pointer" }}
@@ -145,8 +164,18 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                     )}
 
                     <hr />
+                    <div className="d-flex justify-content-between">
+                        <h6 className="fw-bold mb-3">
+                            Time Logs {logUser ? `- ${logUser.name}` : ""}
+                        </h6>
 
-                    <h6 className="fw-bold mb-3">Time Logs</h6>
+                        <CustomButton
+                            label={"Back to Manager Logs"}
+                            onClick={() => handleViewUser(selectedUser)}
+                        />
+
+                    </div>
+
                     {loading ? (
                         <div className="pb-5">
                             <SharedSpinner />
@@ -155,51 +184,70 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                     ) : logs.length === 0 ? (
                         <p>No timelogs found</p>
                     ) : (
-                        logs.map(log => (
-                            <div key={log._id} className="border p-2 mb-2 rounded">
-                                <div><strong>Date:</strong> {new Date(log.date).toLocaleDateString()}</div>
-                                <div><strong>Hours:</strong> {log.hours}</div>
-                                <div><strong>Description:</strong> {log.description}</div>
-                                <div><strong>Amount:</strong> {log.totalAmount}</div>
-                                <div className="mb-2">
-                                    <strong>Status:</strong>{" "}
-                                    <span className={
-                                        log.status === TIMELOG_STATUS.APPROVED ? "text-success"
-                                            : log.status === TIMELOG_STATUS.REJECTED ? "text-danger"
-                                                : "text-warning"
-                                    }>
-                                        {log.status}
-                                    </span>
-                                </div>
+                        <Row>
+                            {logs.map((log) => (
+                                <Col xs={12} lg={6} key={log._id}>
+                                    <div className="border p-2 my-2 rounded" style={{height:"100%"}}>
+                                        <div><strong>Date:</strong> {new Date(log.date).toLocaleDateString()}</div>
+                                        <div><strong>Hours:</strong> {log.hours}</div>
+                                        <div><strong>Description:</strong> {log.description}</div>
+                                        <div><strong>Amount:</strong> {log.totalAmount}</div>
 
-                                {log.status === TIMELOG_STATUS.PENDING && (
+                                        <div className="mb-2">
+                                            <strong>Status:</strong>{" "}
+                                            <span
+                                                className={
+                                                    log.status === TIMELOG_STATUS.APPROVED
+                                                        ? "text-success"
+                                                        : log.status === TIMELOG_STATUS.REJECTED
+                                                            ? "text-danger"
+                                                            : "text-warning"
+                                                }
+                                            >
+                                                {log.status}
+                                            </span>
+                                        </div>
 
+                                        {log.status === TIMELOG_STATUS.PENDING && (
+                                            <Row className="mt-2">
+                                                <Col xs={12} lg={6}>
+                                                    <CustomButton
+                                                        variant="success"
+                                                        onClick={() =>
+                                                            handleStatusChange(
+                                                                log._id,
+                                                                TIMELOG_STATUS.APPROVED
+                                                            )
+                                                        }
+                                                        label="Approve"
+                                                        fullWidth
+                                                        className="mb-1"
+                                                    />
+                                                </Col>
 
-                                    <Row className="mt-2">
-                                        <Col xs={12} lg={6}>
-                                            <CustomButton
-                                                variant="success"
-                                                onClick={() => handleStatusChange(log._id, TIMELOG_STATUS.APPROVED)}
-                                                label={"Approve"}
-                                                fullWidth
-                                                className="mb-1"
-                                            />
-                                        </Col>
-                                        <Col xs={12} lg={6}>
-                                            <CustomButton
-                                                variant="danger"
-                                                onClick={() => handleStatusChange(log._id, TIMELOG_STATUS.REJECTED)}
-                                                loading={loading}
-                                                label={"Reject"}
-                                                fullWidth
-                                                className="mb-1"
-                                            />
-                                        </Col>
-                                    </Row>
-                                )}
-                            </div>
-                        ))
+                                                <Col xs={12} lg={6}>
+                                                    <CustomButton
+                                                        variant="danger"
+                                                        onClick={() =>
+                                                            handleStatusChange(
+                                                                log._id,
+                                                                TIMELOG_STATUS.REJECTED
+                                                            )
+                                                        }
+                                                        loading={loading}
+                                                        label="Reject"
+                                                        fullWidth
+                                                        className="mb-1"
+                                                    />
+                                                </Col>
+                                            </Row>
+                                        )}
+                                    </div>
+                                </Col>
+                            ))}
+                        </Row>
                     )}
+
 
                 </div>
             </Canvas>
