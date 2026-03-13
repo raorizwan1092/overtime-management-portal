@@ -79,16 +79,6 @@ const UserTable = () => {
         <div>
             {user?.role === USER_ROLES.HR && (
                 <div className="d-flex justify-content-between mb-4">
-                    <CustomButton
-                        label={
-                            <>
-                                <FaPlus className="me-2" />
-                                Add User
-                            </>
-                        }
-                        onClick={handleAddUser}
-                    />
-
                     <Form.Select
                         style={{ width: "220px" }}
                         value={filter}
@@ -100,6 +90,17 @@ const UserTable = () => {
                         <option value="">Managers & HR</option>
                         <option value="unassigned">Unassigned Employees</option>
                     </Form.Select>
+                    <CustomButton
+                        label={
+                            <>
+                                <FaPlus className="me-2" />
+                                Add User
+                            </>
+                        }
+                        onClick={handleAddUser}
+                    />
+
+
                 </div>
             )}
 

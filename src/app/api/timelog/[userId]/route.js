@@ -4,26 +4,30 @@ import { verifyToken } from "@/utils/verifyToken";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
-    try {
-        const decoded = verifyToken(req);
+  try {
+    const decoded = verifyToken(req);
 
-        if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-        await connectDB();
-        const { userId } = await params;
-
-        const logs = await TimeLog.find({ user: userId })
-            .sort({ date: -1 });
-
-        return NextResponse.json({ success: true, data: logs });
-
-    } catch (error) {
-        console.error("Error fetching time logs:", error);
-
-        return NextResponse.json(
-            { success: false, message: "Server error", error: error.message },
-            { status: 500 }
-        );
+    if (!decoded) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    await connectDB();
+
+    const { userId } = await params;
+
+    if (!userId) {
+      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    }
+
+    const logs = await TimeLog.find({ user: userId }).sort({ date: -1 });
+
+    return NextResponse.json({ success: true, data: logs });
+  } catch (error) {
+    console.error("Error fetching time logs:", error);
+
+    return NextResponse.json(
+      { success: false, message: "Server error", error: error.message },
+      { status: 500 }
+    );
+  }
 }
