@@ -59,7 +59,7 @@ export async function POST(req) {
   }
   const rules = await Rules.findOne().sort({ createdAt: -1 });
 
-  const totalAmount = calculateTotalAmount(hours, decoded.hourlyRate, rules);
+  const totalAmount = calculateTotalAmount(hours, decoded.hourlyRate, rules, dateOnly);
   const log = await TimeLog.findOneAndUpdate(
     { user: decoded.userId, date: dateOnly },
     {

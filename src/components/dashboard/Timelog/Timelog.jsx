@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Button, Spinner } from "react-bootstrap";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, isFuture } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, isFuture, isWeekend } from "date-fns";
 import axios from "axios";
 import { useTheme } from "@/contexts/ThemeContext";
 import TimeLogCanvas from "./TimeLogCanvas";
@@ -104,7 +104,7 @@ const Timelog = () => {
             <Row className="my-2 align-items-center">
                 <Col className="d-flex justify-content-between align-items-center">
                     <CustomButton label={"Previous"} onClick={goToPreviousMonth} />
-                  
+
 
                     <h3>{format(currentDate, "MMMM yyyy")}</h3>
                     <CustomButton label={"Next"} onClick={goToNextMonth} disabled={isNextMonthDisabled()} />
@@ -112,7 +112,7 @@ const Timelog = () => {
             </Row>
 
             {loading ? (
-                <SharedSpinner/>
+                <SharedSpinner />
             ) : (
                 <Row className="g-2 mt-2 d-flex justify-content-center">
                     {getDaysInMonth().map((date, index) => {
@@ -195,15 +195,16 @@ const Timelog = () => {
                                                     >
                                                         {log.totalAmount || 0}
                                                     </span>
+                                                    {isWeekend(date) && (
+                                                        <span style={{ fontSize: "10px", color: "#ff9800" }}>
+                                                            Weekend x2
+                                                        </span>
+                                                    )}
+
                                                 </div>
                                             )}
 
                                         </div>
-                                        {/* {log?.description && (
-                                            <small style={{ color: theme.grayText }} className="d-block text-truncate">
-                                                {log.description}
-                                            </small>
-                                        )} */}
                                         {isFutureDate && <small style={{ color: theme.grayText }}>Future</small>}
                                     </Card.Body>
                                 </Card>

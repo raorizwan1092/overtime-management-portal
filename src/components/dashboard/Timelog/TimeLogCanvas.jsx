@@ -43,7 +43,7 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                 }}
                 validationSchema={TimeLogSchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                    await onSave({ hours: values.hours }); // only send hours
+                    await onSave({ hours: values.hours });
                     setSubmitting(false);
                     onHide();
                 }}
@@ -52,7 +52,8 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                     const totalAmount = calculateTotalAmount(
                         Number(values.hours),
                         user?.hourlyRate || 0,
-                        rule
+                        rule,
+                        selectedDate
                     );
 
                     return (
