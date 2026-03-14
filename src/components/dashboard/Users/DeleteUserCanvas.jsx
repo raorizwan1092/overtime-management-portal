@@ -24,6 +24,8 @@ const DeleteUserCanvas = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers,
 
                 if (fetchUsers) {
                     fetchUsers();
+                }
+                if (fetchUserTable) {
                     fetchUserTable()
                 }
             }

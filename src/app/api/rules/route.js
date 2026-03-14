@@ -8,9 +8,9 @@ export async function GET(req) {
 
     try {
         const decoded = verifyToken(req);
-        if (!decoded || decoded.role !== USER_ROLES.HR) {
-            return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
-        }
+        // if (!decoded || decoded.role !== USER_ROLES.HR) {
+        //     return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
+        // }
         await connectDB();
 
         let rule = await Rules.findOne();

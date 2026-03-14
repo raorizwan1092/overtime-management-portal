@@ -199,11 +199,11 @@ const Timelog = () => {
                                             )}
 
                                         </div>
-                                        {log?.description && (
+                                        {/* {log?.description && (
                                             <small style={{ color: theme.grayText }} className="d-block text-truncate">
                                                 {log.description}
                                             </small>
-                                        )}
+                                        )} */}
                                         {isFutureDate && <small style={{ color: theme.grayText }}>Future</small>}
                                     </Card.Body>
                                 </Card>

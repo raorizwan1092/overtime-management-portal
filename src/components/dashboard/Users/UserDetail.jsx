@@ -33,7 +33,6 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [logUser, setLogUser] = useState(null);
 
-    // Fetch logs and team when canvas opens
     useEffect(() => {
         if (!showCanvas || !selectedUser?._id) return;
 
@@ -43,7 +42,6 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
         if (selectedUser.role === USER_ROLES.MANAGER) fetchTeam();
     }, [showCanvas, selectedUser]);
 
-    // Fetch user logs
     const fetchLogs = async (userId = selectedUser?._id) => {
         if (!userId) return;
         setLoading(true);
@@ -57,7 +55,6 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
         }
     };
 
-    // Fetch manager team
     const fetchTeam = async () => {
         if (!selectedUser?._id) return;
         setTeamLoading(true);
@@ -180,8 +177,8 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                         </>
                     )}
 
-                   
-                   
+
+
                 </div>
             </Canvas>
 
@@ -196,8 +193,7 @@ const UserDetail = ({ showCanvas, setShowCanvas, selectedUser, fetchUsers }) => 
                 showCanvas={showDeleteCanvas}
                 setShowCanvas={setShowDeleteCanvas}
                 selectedUser={selectedMember}
-                fetchUsers={fetchTeam}
-                fetchUserTable={fetchUsers}
+                fetchUserTable={fetchTeam}
             />
             {selectedUserId && (
                 <UserTimeLogCanvas

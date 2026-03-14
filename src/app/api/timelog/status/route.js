@@ -10,19 +10,28 @@ export async function PUT(req) {
     if (!decoded) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
     await connectDB();
 
-    const { id, status } = await req.json();
+    const { id, status, description } = await req.json();
 
     const updated = await TimeLog.findByIdAndUpdate(
       id,
-      { status },
+      {
+        status,
+        description
+      },
       { new: true }
     );
 
-    return NextResponse.json({ success: true, data: updated });
+    return NextResponse.json({
+      success: true,
+      data: updated
+    });
 
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       { success: false },
       { status: 500 }

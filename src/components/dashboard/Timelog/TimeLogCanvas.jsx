@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import TextInput from "../../shared/TextInput/TextInput";
 import CustomButton from "../../shared/Button/Button";
 import { Formik, Form as FormikForm } from "formik";
-import * as Yup from "yup";
 import Canvas from "../../shared/Canvas";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -15,9 +14,8 @@ import { TimeLogSchema } from "@/ValidationSchemas/TimeLogSchema";
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
     const { user } = useAuth();
     const theme = useTheme();
-    const [rule, setRule] = useState()
+    const [rule, setRule] = useState();
 
-   
     useEffect(() => {
         const fetchRule = async () => {
             try {
@@ -32,7 +30,6 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
         fetchRule();
     }, []);
 
-
     return (
         <Canvas
             show={show}
@@ -43,16 +40,15 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
             <Formik
                 initialValues={{
                     hours: initialData?.hours || "",
-                    description: initialData?.description || "",
                 }}
                 validationSchema={TimeLogSchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                    await onSave(values);
+                    await onSave({ hours: values.hours }); // only send hours
                     setSubmitting(false);
                     onHide();
                 }}
             >
-                {({ values, errors, touched, handleChange, handleSubmit, isSubmitting }) => {
+                {({ values, errors, touched, handleChange, isSubmitting }) => {
                     const totalAmount = calculateTotalAmount(
                         Number(values.hours),
                         user?.hourlyRate || 0,
@@ -61,7 +57,6 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
 
                     return (
                         <FormikForm className="p-3">
-
                             <TextInput
                                 label="Hours"
                                 name="hours"
@@ -72,25 +67,41 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                                 touched={touched.hours}
                                 classNam={"mb-0"}
                             />
-                            <TextInput
-                                label="Description (Optional)"
-                                name="description"
-                                type="textarea"
-                                value={values.description}
-                                onChange={handleChange}
-                                error={errors.description}
-                                touched={touched.description}
-                            />
+                            {initialData?.description && (
+                                <>
+                                    <div style={{ fontSize: "small", color: theme?.lightGray }}>
+                                        <strong>Description:</strong>
+                                    </div>
+                                    <div
+                                        style={{
+                                            fontSize: "0.85rem",
+                                            color: theme.grayText,
+                                            marginTop: "6px",
+                                            padding: "6px 6px",
+                                            borderRadius: theme.radius,
+                                            background: theme.cardBackground
+                                        }}
+                                    >
+                                        {initialData.description}
+                                    </div>
+                                </>
+                            )}
+
                             {user?.hourlyRate && (
                                 <div style={{ fontSize: "small", color: theme?.lightGray }}>
                                     Total Amount: ${totalAmount.toFixed(2)}
                                 </div>
                             )}
+
                             {selectedDate && (
-                                <div className="mb-3" style={{ fontSize: "small", color: theme?.lightGray }}>
+                                <div
+                                    className="mb-3"
+                                    style={{ fontSize: "small", color: theme?.lightGray }}
+                                >
                                     Selected Date: {format(selectedDate, "MMMM d, yyyy")}
                                 </div>
                             )}
+
                             <div className="d-flex justify-content-end gap-2 mt-2">
                                 <CustomButton
                                     label="Save Hours"

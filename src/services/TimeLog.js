@@ -9,8 +9,8 @@ export const addTimeLog = (data) => {
 export const getLogsById = (id) => {
     return GetApiData(`/timelog/${id}`, "GET", null, true);
 };
-export const updateLogStatus = (id, status) => {
-    return GetApiData(`/timelog/status`, "PUT", { id, status }, true);
+export const updateLogStatus = (id, data) => {
+    return GetApiData(`/timelog/status`, "PUT", { id, ...data }, true);
 };
 export const getUserTeam = (managerId) => {
     return GetApiData(`/users/team?managerId=${managerId}`, "GET", null, true);
