@@ -11,7 +11,7 @@ import { getRule } from "@/services/Rules";
 import { calculateTotalAmount } from "@/utils/calculateTotalAmount";
 import { TimeLogSchema } from "@/ValidationSchemas/TimeLogSchema";
 import { Form } from "react-bootstrap";
-
+ 
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
     console.log("initialData", initialData)
     const { user } = useAuth();
