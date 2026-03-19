@@ -13,7 +13,6 @@ import { TimeLogSchema } from "@/ValidationSchemas/TimeLogSchema";
 import { Form } from "react-bootstrap";
  
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
-    console.log("initialData", initialData)
     const { user } = useAuth();
     const theme = useTheme();
     const [rule, setRule] = useState();
