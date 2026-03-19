@@ -10,8 +10,10 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { getRule } from "@/services/Rules";
 import { calculateTotalAmount } from "@/utils/calculateTotalAmount";
 import { TimeLogSchema } from "@/ValidationSchemas/TimeLogSchema";
+import { Form } from "react-bootstrap";
 
 const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
+    console.log("initialData", initialData)
     const { user } = useAuth();
     const theme = useTheme();
     const [rule, setRule] = useState();
@@ -40,20 +42,25 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
             <Formik
                 initialValues={{
                     hours: initialData?.hours || "",
+                    isPublicHoliday: initialData?.isPublicHoliday || false,
                 }}
                 validationSchema={TimeLogSchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                    await onSave({ hours: values.hours });
+                    await onSave({
+                        hours: values.hours,
+                        isPublicHoliday: values.isPublicHoliday,
+                    });
                     setSubmitting(false);
                     onHide();
                 }}
             >
-                {({ values, errors, touched, handleChange, isSubmitting }) => {
+                {({ values, errors, touched, handleChange, isSubmitting, setFieldValue }) => {
                     const totalAmount = calculateTotalAmount(
                         Number(values.hours),
                         user?.hourlyRate || 0,
                         rule,
-                        selectedDate
+                        selectedDate,
+                        values.isPublicHoliday
                     );
 
                     return (
@@ -87,6 +94,18 @@ const TimeLogCanvas = ({ show, onHide, selectedDate, initialData, onSave }) => {
                                     </div>
                                 </>
                             )}
+                            <div className="mt-2 mb-2">
+                                <Form.Check
+                                    type="switch"
+                                    id="public-holiday-switch"
+                                    label="Public Holiday"
+                                    name="isPublicHoliday"
+                                    checked={values.isPublicHoliday}
+                                    onChange={(e) =>
+                                        setFieldValue("isPublicHoliday", e.target.checked)
+                                    }
+                                />
+                            </div>
 
                             {user?.hourlyRate && (
                                 <div style={{ fontSize: "small", color: theme?.lightGray }}>

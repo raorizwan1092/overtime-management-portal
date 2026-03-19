@@ -137,6 +137,12 @@ const UserTimeLogCanvas = ({ userId, showCanvas, setShowCanvas, title }) => {
                                                 </div>
 
                                                 <div>
+                                                    {log?.isPublicHoliday && (
+                                                        <span style={{ fontSize: "10px", color: "#00bcd4" }}>
+                                                            Public Holiday
+                                                        </span>
+                                                    )}
+                                                    <br />
                                                     {log ? (
                                                         <span className={getStatusClass(log.status)} style={{ fontSize: "12px" }}>
                                                             {log.status}

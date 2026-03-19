@@ -1,4 +1,10 @@
-export const calculateTotalAmount = (hours, hourlyRate, rule, date) => {
+export const calculateTotalAmount = (
+    hours,
+    hourlyRate,
+    rule,
+    date,
+    isPublicHoliday = false
+) => {
     if (!hours || !hourlyRate) return 0;
     if (!rule) return hours * hourlyRate;
 
@@ -23,7 +29,9 @@ export const calculateTotalAmount = (hours, hourlyRate, rule, date) => {
     if (hours > rule.maxHours + 4) {
         total += (hours - (rule.maxHours + 4)) * hourlyRate;
     }
-    if (isWeekend) {
+
+    // ✅ Apply double ONLY ONCE
+    if (isWeekend || isPublicHoliday) {
         total = total * 2;
     }
 

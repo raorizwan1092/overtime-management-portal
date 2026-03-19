@@ -38,3 +38,13 @@ tbody tr td {
 .progress {
     background-color: #6e6b6b !important;
 }
+.form-check-input:checked{
+    background-color: #000 !important;
+
+    border-color: white !important;
+}
+.form-check-input{
+    background-color: #9c9b9b !important;
+
+    border-color: white !important;
+}

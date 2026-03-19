@@ -32,7 +32,10 @@ const timeLogSchema = new mongoose.Schema(
       enum: Object.values(TIMELOG_STATUS),
       default: TIMELOG_STATUS.PENDING,
     },
-
+    isPublicHoliday: {
+      type: Boolean,
+      default: false,
+    },    
     approvedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

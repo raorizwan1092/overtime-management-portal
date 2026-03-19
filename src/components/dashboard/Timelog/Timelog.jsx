@@ -47,6 +47,7 @@ const Timelog = () => {
                     description: log.description,
                     status: log.status,
                     totalAmount: log.totalAmount || 0,
+                    isPublicHoliday: log.isPublicHoliday || false,
                 };
             });
 
@@ -87,7 +88,7 @@ const Timelog = () => {
     const handleSaveLog = async values => {
         try {
             setSaving(true);
-            const logData = { date: format(selectedDate, "yyyy-MM-dd"), hours: parseFloat(values.hours), description: values.description };
+            const logData = { date: format(selectedDate, "yyyy-MM-dd"), hours: parseFloat(values.hours), description: values.description, isPublicHoliday: values.isPublicHoliday, };
             await addTimeLog(logData);
             await fetchTimeLogs();
             setShowCanvas(false);
@@ -151,6 +152,12 @@ const Timelog = () => {
                                                 <small style={{ fontWeight: "bold" }}>{format(date, "EEE")}</small> {/* Weekday */}
                                                 <br />
                                                 <small>{format(date, "d")}</small>
+                                                <br />
+                                                {log?.isPublicHoliday && (
+                                                    <span style={{ fontSize: "10px", color: "#00bcd4" }}>
+                                                        Public Holiday
+                                                    </span>
+                                                )}
                                             </div>
                                             {log && (
                                                 <div className="d-flex flex-column align-items-end">

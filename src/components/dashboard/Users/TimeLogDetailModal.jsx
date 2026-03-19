@@ -93,6 +93,9 @@ const TimeLogDetailModal = ({
                         <p>
                             <strong>Total Amount:</strong> {selectedLog.totalAmount}
                         </p>
+                        <p>
+                            <strong>Public Holiday:</strong> {selectedLog.isPublicHoliday ? "True" : "False"}
+                        </p>
 
                         <TextInput
                             label="Description"

@@ -45,10 +45,14 @@ export async function POST(req) {
 
   await connectDB();
 
-  const { date, hours, description } = await req.json();
+  const { date, hours, description, isPublicHoliday } = await req.json();
 
   if (!date) return NextResponse.json({ error: "Date is required" }, { status: 400 });
   if (hours < 0 || hours > 24) return NextResponse.json({ error: "Invalid hours" }, { status: 400 });
+
+  if (typeof isPublicHoliday !== "undefined" && typeof isPublicHoliday !== "boolean") {
+    return NextResponse.json({ error: "Invalid public holiday flag" }, { status: 400 });
+  }
 
   const dateOnly = new Date(date);
   dateOnly.setUTCHours(0, 0, 0, 0);
@@ -57,14 +61,23 @@ export async function POST(req) {
   if (existingLog && existingLog.status === TIMELOG_STATUS.APPROVED) {
     return NextResponse.json({ error: "Cannot edit approved log" }, { status: 400 });
   }
+
   const rules = await Rules.findOne().sort({ createdAt: -1 });
 
-  const totalAmount = calculateTotalAmount(hours, decoded.hourlyRate, rules, dateOnly);
+  const totalAmount = calculateTotalAmount(
+    hours,
+    decoded.hourlyRate,
+    rules,
+    dateOnly,
+    isPublicHoliday
+  );
+
   const log = await TimeLog.findOneAndUpdate(
     { user: decoded.userId, date: dateOnly },
     {
       hours,
       description,
+      isPublicHoliday,
       status: TIMELOG_STATUS.PENDING,
       totalAmount,
     },
@@ -73,3 +86,4 @@ export async function POST(req) {
 
   return NextResponse.json({ success: true, log });
 }
+
