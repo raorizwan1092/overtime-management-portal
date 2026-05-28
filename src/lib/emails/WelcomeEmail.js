@@ -1,5 +1,5 @@
 export function welcomeEmailTemplate({ name, email, password }) {
-    return `
+  return `
       <html>
         <head>
           <style>
@@ -42,7 +42,7 @@ export function welcomeEmailTemplate({ name, email, password }) {
             </div>
             
             <div style="text-align: center; margin: 35px 0 25px 0;">
-              <a href="#" style="background: #ffffff; color: #000000; text-decoration: none; padding: 14px 40px; border-radius: 30px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(255,255,255,0.2);">
+              <a href="https://portal-of-hr.vercel.app/signin" style="background: #ffffff; color: #000000; text-decoration: none; padding: 14px 40px; border-radius: 30px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(255,255,255,0.2);">
                 Login to Your Account
               </a>
             </div>
