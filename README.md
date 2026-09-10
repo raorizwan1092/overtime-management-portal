@@ -92,8 +92,8 @@ Install the following before running the project:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/raorizwan1092/portal.git
-cd portal
+git clone https://github.com/raorizwan1092/overtime-management-portal.git
+cd overtime-management-portal
 ```
 
 2. Install the dependencies:
